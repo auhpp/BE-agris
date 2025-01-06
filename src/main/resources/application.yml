@@ -1,3 +1,14 @@
 spring:
   application:
     name: agri_supplies_shop
+  datasource:
+    url: jdbc:postgresql://localhost:5432/agri_supplies_shop
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
