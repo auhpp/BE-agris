@@ -41,7 +41,7 @@ public class Category {
     @JoinColumn
     private Category parent;
 
-    @OneToMany(mappedBy = "parentId")
+    @OneToMany(mappedBy = "parent")
     private List<Category> categories;
 
     //product
