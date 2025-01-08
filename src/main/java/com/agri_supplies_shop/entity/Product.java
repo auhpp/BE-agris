@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -33,10 +34,10 @@ public class Product {
     private Origin origin;
 
     @Column(nullable = false)
-    private ZonedDateTime productionDate;
+    private LocalDate productionDate;
 
     @Column(nullable = false)
-    private ZonedDateTime expiry;
+    private LocalDate expiry;
 
     @Column(nullable = false)
     private Long stock;
