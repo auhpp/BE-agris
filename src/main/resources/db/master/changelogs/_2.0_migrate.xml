@@ -1,0 +1,38 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--Category-->
+    <changeSet author="PhiAu (generated)" id="1">
+        <insert tableName="category">
+            <column name="id">1</column>
+            <column name="name">Phân bón</column>
+            <column name="status">ACTIVE</column>
+            <column name="parent_id">null</column>
+            <column name="created_at">NOW()</column>
+            <column name="updated_at">NOW()</column>
+        </insert>
+    </changeSet>
+    <changeSet author="PhiAu (generated)" id="2">
+        <insert tableName="category">
+            <column name="id">2</column>
+            <column name="name">Phân bón lá</column>
+            <column name="status">ACTIVE</column>
+            <column name="parent_id">1</column>
+            <column name="created_at">NOW()</column>
+            <column name="updated_at">NOW()</column>
+        </insert>
+    </changeSet>
+    <!--supplier-->
+    <changeSet author="PhiAu (generated)" id="3">
+        <insert tableName="supplier">
+            <column name="id">1</column>
+            <column name="name">Công ty TNHH MTV Sinh Hóa Nông Phú Lâm</column>
+            <column name="email">phulam@gmail.com</column>
+            <column name="phone_number">0123456789</column>
+            <column name="updated_at">NOW()</column>
+            <column name="created_at">NOW()</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

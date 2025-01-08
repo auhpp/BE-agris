@@ -177,7 +177,7 @@
             <column name="description" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="expiry" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+            <column name="expiry" type="date">
                 <constraints nullable="false"/>
             </column>
             <column name="image" type="VARCHAR(255)"/>
@@ -187,7 +187,7 @@
             <column name="origin" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="production_date" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+            <column name="production_date" type="date">
                 <constraints nullable="false"/>
             </column>
             <column name="rating" type="FLOAT4"/>
