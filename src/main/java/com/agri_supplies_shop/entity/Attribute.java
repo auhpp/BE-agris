@@ -33,6 +33,6 @@ public class Attribute {
 
     //Relationship
     //attribute
-    @OneToMany(mappedBy = "attribute")
+    @OneToMany(mappedBy = "attribute", cascade = {CascadeType.PERSIST})
     private List<ProductAttributeValue> productAttributeValues;
 }
