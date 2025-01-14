@@ -21,6 +21,7 @@
     <changeSet author="PhiAu (generated)" id="1736255587710-7">
         <createSequence incrementBy="50" sequenceName="payment_detail_seq" startValue="1"/>
     </changeSet>
+
     <changeSet author="PhiAu (generated)" id="1736255587710-8">
         <createSequence incrementBy="50" sequenceName="product_attribute_value_seq" startValue="1"/>
     </changeSet>

@@ -2,10 +2,7 @@ package com.agri_supplies_shop.entity;
 
 import com.agri_supplies_shop.enums.Origin;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -14,7 +11,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,6 +42,7 @@ public class Product {
 
     private Float rating;
 
+    @Column(columnDefinition = "TEXT")
     private String image;
 
     private long totalSold;
@@ -65,7 +64,7 @@ public class Product {
     private List<ProductImage> productImages;
 
     //product attribute value
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST})
     private List<ProductAttributeValue> productAttributeValues;
 
     //category
@@ -76,4 +75,8 @@ public class Product {
     //review
     @OneToMany(mappedBy = "product")
     private List<Review> reviews;
+
+    //product variant value
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST})
+    private List<ProductVariantValue> productVariantValues;
 }

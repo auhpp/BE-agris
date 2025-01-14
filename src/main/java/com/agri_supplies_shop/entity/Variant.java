@@ -32,6 +32,6 @@ public class Variant {
     private ZonedDateTime updatedAt;
 
     //Relationship
-    @OneToMany(mappedBy = "variant")
+    @OneToMany(mappedBy = "variant", cascade = {CascadeType.PERSIST})
     private List<VariantValue> variantValues;
 }
