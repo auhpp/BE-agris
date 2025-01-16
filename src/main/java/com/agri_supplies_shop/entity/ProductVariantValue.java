@@ -1,5 +1,6 @@
 package com.agri_supplies_shop.entity;
 
+import com.agri_supplies_shop.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -25,6 +26,20 @@ public class ProductVariantValue {
     @Column(nullable = false)
     private String sku;
 
+    @Column(nullable = false)
+    private Long price;
+
+    private ZonedDateTime startDate;
+
+    private ZonedDateTime endDate;
+
+    private Long discount;
+
+    private String discountUnit;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @CreatedDate
     private ZonedDateTime createdAt;
 
@@ -32,10 +47,6 @@ public class ProductVariantValue {
     private ZonedDateTime updatedAt;
 
     //Relationship
-    //product price
-    @OneToMany(mappedBy = "productVariantValue", cascade = {CascadeType.PERSIST})
-    private List<ProductPrice> productPrices;
-
     //cart item
     @OneToMany(mappedBy = "productVariantValue")
     private List<CartItem> cartItems;

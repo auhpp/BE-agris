@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
@@ -12,7 +13,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VariantValueRequest {
+    private Long id;
     private List<String> variantCombination;
     private Long stock;
-    private ProductPriceRequest productPriceRequest;
+    private Long price;
+
+    private ZonedDateTime startDate;
+
+    private ZonedDateTime endDate;
+
+    private Long discount;
+
+    private String discountUnit;
 }

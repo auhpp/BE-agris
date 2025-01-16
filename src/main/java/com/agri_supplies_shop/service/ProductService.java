@@ -4,5 +4,5 @@ import com.agri_supplies_shop.dto.request.ProductRequest;
 import com.agri_supplies_shop.dto.response.ProductResponse;
 
 public interface ProductService {
-    ProductResponse createProduct(ProductRequest productRequest);
+    ProductResponse createAndUpdateProduct(ProductRequest productRequest);
 }

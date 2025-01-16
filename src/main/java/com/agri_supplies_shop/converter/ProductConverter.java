@@ -28,6 +28,10 @@ public class ProductConverter {
         return product;
     }
 
+    public Product fromRequestToProductEntity(ProductRequest request, Product product){
+        modelMapper.map(request, product);
+        return product;
+    }
     public ProductResponse toProductResponse(Product product) {
         ProductResponse response = modelMapper.map(product, ProductResponse.class);
         //Category

@@ -1,6 +1,7 @@
 package com.agri_supplies_shop.entity;
 
 import com.agri_supplies_shop.enums.OrderDetailStatus;
+import com.agri_supplies_shop.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +26,14 @@ public class OrderDetail {
     private String note;
 
     @Enumerated(EnumType.STRING)
-    private OrderDetailStatus status;
+    private OrderDetailStatus orderStatus;
+
+    private Long amount;
+
+    private String provider;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
     @CreatedDate
     private ZonedDateTime createdAt;
@@ -38,11 +46,6 @@ public class OrderDetail {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Users user;
-
-    //Payment detail
-    @OneToOne
-    @JoinColumn(nullable = false)
-    private PaymentDetail paymentDetail;
 
     //Order item
     @OneToMany(mappedBy = "orderDetail")

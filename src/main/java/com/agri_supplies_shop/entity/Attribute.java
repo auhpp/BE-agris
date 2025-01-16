@@ -1,10 +1,7 @@
 package com.agri_supplies_shop.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -12,7 +9,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,6 +31,6 @@ public class Attribute {
 
     //Relationship
     //attribute
-    @OneToMany(mappedBy = "attribute", cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "attribute")
     private List<ProductAttributeValue> productAttributeValues;
 }

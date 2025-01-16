@@ -64,7 +64,7 @@ public class Product {
     private List<ProductImage> productImages;
 
     //product attribute value
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "product")
     private List<ProductAttributeValue> productAttributeValues;
 
     //category
@@ -77,6 +77,6 @@ public class Product {
     private List<Review> reviews;
 
     //product variant value
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "product")
     private List<ProductVariantValue> productVariantValues;
 }

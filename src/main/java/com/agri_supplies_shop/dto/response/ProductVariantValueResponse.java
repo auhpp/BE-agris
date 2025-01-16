@@ -15,6 +15,8 @@ public class ProductVariantValueResponse {
     private Long id;
     private int stock;
     private String sku;
-    private ProductPriceResponse price;
+    private Long price;
+    private Long oldPrice;
+    private String discount;
     private List<VariantResponse> variantValues;
 }

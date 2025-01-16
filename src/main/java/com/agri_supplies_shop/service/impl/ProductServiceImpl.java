@@ -5,7 +5,9 @@ import com.agri_supplies_shop.dto.request.ProductRequest;
 import com.agri_supplies_shop.dto.response.AttributeResponse;
 import com.agri_supplies_shop.dto.response.ProductResponse;
 import com.agri_supplies_shop.dto.response.ProductVariantValueResponse;
-import com.agri_supplies_shop.entity.*;
+import com.agri_supplies_shop.entity.Category;
+import com.agri_supplies_shop.entity.Product;
+import com.agri_supplies_shop.entity.Supplier;
 import com.agri_supplies_shop.enums.Origin;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
@@ -47,28 +49,37 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductResponse createProduct(ProductRequest productRequest) {
-        Product product = productConverter.toProductEntity(productRequest);
+    public ProductResponse createAndUpdateProduct(ProductRequest productRequest) {
+        Product product = new Product();
+        if (productRequest.getId() != null) {
+            product = productRepository.findById(productRequest.getId()).orElseThrow(
+                    () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
+            );
+            product = productConverter.fromRequestToProductEntity(productRequest, product);
+        } else {
+            product = productConverter.toProductEntity(productRequest);
+        }
         product.setOrigin(Origin.valueOf(productRequest.getOrigin()));
 
         //Get category entity
         Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow(
-                () -> new AppException(ErrorCode.NOT_FOUND_CATEGORY)
+                () -> new AppException(ErrorCode.CATEGORY_NOT_FOUND)
         );
         product.setCategory(category);
         //Get supplier entity
         Supplier supplier = supplierRepository.findById(productRequest.getSupplierId()).orElseThrow(
-                () -> new AppException(ErrorCode.NOT_FOUND_SUPPLIER)
+                () -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND)
         );
         product.setSupplier(supplier);
         //Save product
         productRepository.save(product);
 
         //Save attribute
+        Product finalProduct = product;
         List<AttributeResponse> attributeResponses =
                 productRequest.getAttributes().stream().map(
                         it ->
-                                attributeService.createAttribute(it, product)
+                                attributeService.createAttribute(it, finalProduct)
                 ).toList();
         //Save variant
         productRequest.getVariants().forEach(
@@ -79,9 +90,9 @@ public class ProductServiceImpl implements ProductService {
         //save product variant value
         List<ProductVariantValueResponse> productVariantValueResponses =
                 productRequest.getVariantValues().stream().map(
-                it ->
-                    productVariantValueService.createProductVariantValue(it, product)
-        ).toList();
+                        it ->
+                                productVariantValueService.createProductVariantValue(it, finalProduct)
+                ).toList();
         ProductResponse response = productConverter.toProductResponse(product);
         response.setAttributes(attributeResponses);
         response.setVariants(productVariantValueResponses);
