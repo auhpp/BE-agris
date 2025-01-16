@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AttributeRequest {
+    private Long id;
     private String name;
     private String value;
 }

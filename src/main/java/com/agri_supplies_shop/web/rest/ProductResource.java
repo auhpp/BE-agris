@@ -15,11 +15,11 @@ public class ProductResource {
     private ProductService productService;
 
     @PostMapping
-    public ApiResponse<ProductResponse> createProduct(@RequestBody ProductRequest productRequest) {
+    public ApiResponse<ProductResponse> createAndUpdateProduct(@RequestBody ProductRequest productRequest) {
         ApiResponse<ProductResponse> response = new ApiResponse<>();
         response.setCode(200);
         response.setMessage("Create product success!");
-        response.setResult(productService.createProduct(productRequest));
+        response.setResult(productService.createAndUpdateProduct(productRequest));
         return response;
     }
 

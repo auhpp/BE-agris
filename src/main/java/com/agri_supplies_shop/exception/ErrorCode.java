@@ -7,9 +7,13 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
-    NOT_FOUND_CATEGORY(1001, "Not found category", HttpStatus.NOT_FOUND),
-    NOT_FOUND_SUPPLIER(1012, "Not found supplier", HttpStatus.NOT_FOUND),
-    ;
+    CATEGORY_NOT_FOUND(1001, "Category not found", HttpStatus.NOT_FOUND),
+    SUPPLIER_NOT_FOUND(1002, "Supplier not found", HttpStatus.NOT_FOUND),
+    PRODUCT_NOT_FOUND(1003, "Product not found", HttpStatus.NOT_FOUND),
+    ATTRIBUTE_NOT_FOUND(1004, "Attribute not found", HttpStatus.NOT_FOUND),
+    PRODUCT_PRICE_NOT_FOUND(1005, "Product price not found", HttpStatus.NOT_FOUND),
+    PRODUCT_VARIANT_VALUE_NOT_FOUND(1006, "Product variant value not found", HttpStatus.NOT_FOUND),
+    VARIANT_VALUE_NOT_FOUND(1006, "Variant value not found", HttpStatus.NOT_FOUND);
 
     private final int code;
     private final String message;

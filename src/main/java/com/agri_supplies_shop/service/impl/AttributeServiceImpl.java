@@ -6,6 +6,8 @@ import com.agri_supplies_shop.dto.response.AttributeResponse;
 import com.agri_supplies_shop.entity.Attribute;
 import com.agri_supplies_shop.entity.Product;
 import com.agri_supplies_shop.entity.ProductAttributeValue;
+import com.agri_supplies_shop.exception.AppException;
+import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.AttributeRepository;
 import com.agri_supplies_shop.repository.AttributeValueRepository;
 import com.agri_supplies_shop.service.AttributeService;
@@ -36,12 +38,16 @@ public class AttributeServiceImpl implements AttributeService {
             attributeRepository.save(attribute);
         }
         //Product attribute value
-        ProductAttributeValue pAttributeVal = ProductAttributeValue
-                .builder()
-                .value(attributeRequest.getValue())
-                .attribute(attribute)
-                .product(product)
-                .build();
+        ProductAttributeValue pAttributeVal = new ProductAttributeValue();
+        if(attributeRequest.getId() != null){
+            pAttributeVal = attributeValueRepository.findById(attributeRequest.getId()).orElseThrow(
+                    () -> new AppException(ErrorCode.ATTRIBUTE_NOT_FOUND)
+            );
+        }
+        pAttributeVal.setValue(attributeRequest.getValue());
+        pAttributeVal.setAttribute(attribute);
+        pAttributeVal.setProduct(product);
+
         //Save product attribute value
         attributeValueRepository.save(pAttributeVal);
         return attributeConverter.toAttributeResponse(pAttributeVal);
