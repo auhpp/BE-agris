@@ -22,10 +22,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "text")
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "text")
     private String description;
 
     @Column(nullable = false)

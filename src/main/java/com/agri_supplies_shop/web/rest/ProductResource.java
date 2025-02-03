@@ -1,7 +1,9 @@
 package com.agri_supplies_shop.web.rest;
 
 import com.agri_supplies_shop.dto.request.ProductRequest;
+import com.agri_supplies_shop.dto.request.SearchProductRequest;
 import com.agri_supplies_shop.dto.response.ApiResponse;
+import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.ProductResponse;
 import com.agri_supplies_shop.service.ProductService;
 import com.agri_supplies_shop.service.ProductVariantValueService;
@@ -26,6 +28,18 @@ public class ProductResource {
         response.setCode(200);
         response.setMessage("Create product success!");
         response.setResult(productService.createAndUpdateProduct(productRequest));
+        return response;
+    }
+
+    @PostMapping("/search")
+    public ApiResponse<PageResponse<ProductResponse>> findProduct(@RequestBody SearchProductRequest searchProductRequest,
+                                                                  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                                  @RequestParam(value = "size", required = false, defaultValue = "10") int size
+                                                                  ){
+        ApiResponse<PageResponse<ProductResponse>> response = new ApiResponse<>();
+        response.setCode(200);
+        response.setMessage("Search product success!");
+        response.setResult(productService.findProduct(searchProductRequest, page, size));
         return response;
     }
 
