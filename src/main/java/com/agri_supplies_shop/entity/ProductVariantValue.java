@@ -48,7 +48,7 @@ public class ProductVariantValue {
 
     //Relationship
     //cart item
-    @OneToMany(mappedBy = "productVariantValue")
+    @OneToMany(mappedBy = "productVariantValue", cascade = {CascadeType.REMOVE})
     private List<CartItem> cartItems;
 
     //order item

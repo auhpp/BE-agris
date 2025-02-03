@@ -61,4 +61,22 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
 
         return variantValueConverter.toProductVariantValueResponse(productVariantValue);
     }
+
+    @Override
+    public void deleteProductVariant(List<Long> ids) {
+        ids.forEach(
+                it -> {
+                    ProductVariantValue productVariant = productVariantValueRepository.findById(it).orElseThrow(
+                            () -> new AppException(ErrorCode.PRODUCT_VARIANT_VALUE_NOT_FOUND)
+                    );
+                    if (productVariant.getOrderItems().isEmpty()) {
+                        productVariantValueRepository.deleteById(it);
+                    }
+                    else{
+                        productVariant.setStatus(Status.INACTIVE);
+                        productVariantValueRepository.save(productVariant);
+                    }
+                }
+        );
+    }
 }

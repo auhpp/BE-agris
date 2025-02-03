@@ -9,6 +9,7 @@ import com.agri_supplies_shop.entity.Category;
 import com.agri_supplies_shop.entity.Product;
 import com.agri_supplies_shop.entity.Supplier;
 import com.agri_supplies_shop.enums.Origin;
+import com.agri_supplies_shop.enums.Status;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.CategoryRepository;
@@ -97,6 +98,30 @@ public class ProductServiceImpl implements ProductService {
         response.setAttributes(attributeResponses);
         response.setVariants(productVariantValueResponses);
         return response;
-
     }
+
+    @Override
+    @Transactional
+    public void deleteProduct(List<Long> ids) {
+        ids.forEach(
+                it -> {
+                    Product product = productRepository.findById(it).orElseThrow(
+                            () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
+                    );
+                    List<Long> pVariantIds = product.getProductVariantValues().stream().map(
+                            pVariantValue -> pVariantValue.getId()
+                    ).toList();
+                    productVariantValueService.deleteProductVariant(pVariantIds);
+                    if (product.getProductVariantValues().isEmpty()) {
+                        productRepository.deleteById(it);
+                    }
+                    else{
+                        product.setStatus(Status.INACTIVE);
+                        productRepository.save(product);
+                    }
+                }
+        );
+    }
+
+
 }

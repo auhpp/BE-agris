@@ -1,6 +1,7 @@
 package com.agri_supplies_shop.entity;
 
 import com.agri_supplies_shop.enums.Origin;
+import com.agri_supplies_shop.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -53,6 +54,9 @@ public class Product {
     @LastModifiedDate
     private ZonedDateTime updatedAt;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     //Relationship
     //supplier
     @ManyToOne
@@ -60,11 +64,11 @@ public class Product {
     private Supplier supplier;
 
     //image
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.REMOVE})
     private List<ProductImage> productImages;
 
     //product attribute value
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.REMOVE})
     private List<ProductAttributeValue> productAttributeValues;
 
     //category
@@ -73,7 +77,7 @@ public class Product {
     private Category category;
 
     //review
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.REMOVE})
     private List<Review> reviews;
 
     //product variant value
