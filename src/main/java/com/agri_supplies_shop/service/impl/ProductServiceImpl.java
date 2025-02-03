@@ -2,7 +2,9 @@ package com.agri_supplies_shop.service.impl;
 
 import com.agri_supplies_shop.converter.ProductConverter;
 import com.agri_supplies_shop.dto.request.ProductRequest;
+import com.agri_supplies_shop.dto.request.SearchProductRequest;
 import com.agri_supplies_shop.dto.response.AttributeResponse;
+import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.ProductResponse;
 import com.agri_supplies_shop.dto.response.ProductVariantValueResponse;
 import com.agri_supplies_shop.entity.Category;
@@ -114,13 +116,28 @@ public class ProductServiceImpl implements ProductService {
                     productVariantValueService.deleteProductVariant(pVariantIds);
                     if (product.getProductVariantValues().isEmpty()) {
                         productRepository.deleteById(it);
-                    }
-                    else{
+                    } else {
                         product.setStatus(Status.INACTIVE);
                         productRepository.save(product);
                     }
                 }
         );
+    }
+
+    @Override
+    public PageResponse<ProductResponse> findProduct(SearchProductRequest searchProductRequest, int page, int size) {
+        List<Product> products = productRepository.findProduct(searchProductRequest, page, size);
+        return PageResponse.<ProductResponse>builder()
+                .currentPage(page)
+                .pageSize(size)
+                .totalElements(products.size())
+                .totalPage((products.size() / size) + 1)
+                .data(
+                        products.stream().map(
+                                it -> productConverter.toProductResponse(it)
+                        ).toList()
+                )
+                .build();
     }
 
 
