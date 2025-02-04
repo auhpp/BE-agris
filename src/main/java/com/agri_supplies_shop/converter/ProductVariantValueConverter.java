@@ -1,6 +1,5 @@
 package com.agri_supplies_shop.converter;
 
-import com.agri_supplies_shop.dto.request.VariantRequest;
 import com.agri_supplies_shop.dto.request.VariantValueRequest;
 import com.agri_supplies_shop.dto.response.ProductVariantValueResponse;
 import com.agri_supplies_shop.dto.response.VariantResponse;
