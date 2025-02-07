@@ -21,13 +21,17 @@ import com.agri_supplies_shop.service.AttributeService;
 import com.agri_supplies_shop.service.ProductService;
 import com.agri_supplies_shop.service.ProductVariantValueService;
 import com.agri_supplies_shop.service.VariantValueService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
@@ -53,6 +57,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse createAndUpdateProduct(ProductRequest productRequest) {
+        var authenticated = SecurityContextHolder.getContext().getAuthentication();
+
+        log.info("username:", authenticated.getName());
+        log.info("Role:", authenticated.getAuthorities());
+
         Product product = new Product();
         if (productRequest.getId() != null) {
             product = productRepository.findById(productRequest.getId()).orElseThrow(
