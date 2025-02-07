@@ -2,6 +2,7 @@ package com.agri_supplies_shop.exception;
 
 import com.agri_supplies_shop.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -31,4 +32,5 @@ public class GlobalExceptionHandler {
                 .status(exception.getErrorCode().getStatus())
                 .body(response);
     }
+
 }

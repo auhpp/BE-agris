@@ -1,8 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-                   xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <!--Category-->
     <changeSet author="PhiAu (generated)" id="1">
         <insert tableName="category">
@@ -33,6 +32,23 @@
             <column name="phone_number">0123456789</column>
             <column name="updated_at">NOW()</column>
             <column name="created_at">NOW()</column>
+        </insert>
+    </changeSet>
+    <!-- role   -->
+    <changeSet id="1738680352193-1" author="auhpp">
+        <insert tableName="role">
+            <column name="name">USER</column>
+            <column name="created_at">NOW()</column>
+            <column name="created_at">NOW()</column>
+            <column name="description">NULL</column>
+        </insert>
+    </changeSet>
+    <changeSet id="1738680352193-2" author="auhpp">
+        <insert tableName="role">
+            <column name="name">ADMIN</column>
+            <column name="created_at">NOW()</column>
+            <column name="created_at">NOW()</column>
+            <column name="description">NULL</column>
         </insert>
     </changeSet>
 </databaseChangeLog>

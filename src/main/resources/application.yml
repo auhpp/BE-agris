@@ -16,3 +16,7 @@ spring:
     show-sql: true
   liquibase:
     enabled: false
+jwt:
+  signer-key:
+  valid-duration: 20 # in second
+  refreshable-duration: 60 # in second

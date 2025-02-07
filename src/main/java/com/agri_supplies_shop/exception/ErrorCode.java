@@ -13,7 +13,11 @@ public enum ErrorCode {
     ATTRIBUTE_NOT_FOUND(1004, "Attribute not found", HttpStatus.NOT_FOUND),
     PRODUCT_PRICE_NOT_FOUND(1005, "Product price not found", HttpStatus.NOT_FOUND),
     PRODUCT_VARIANT_VALUE_NOT_FOUND(1006, "Product variant value not found", HttpStatus.NOT_FOUND),
-    VARIANT_VALUE_NOT_FOUND(1006, "Variant value not found", HttpStatus.NOT_FOUND);
+    VARIANT_VALUE_NOT_FOUND(1007, "Variant value not found", HttpStatus.NOT_FOUND),
+    USER_EXISTED(1008, "User existed", HttpStatus.BAD_REQUEST),
+    USER_NOT_EXISTED(1009, "User not existed", HttpStatus.BAD_REQUEST),
+    UNAUTHENTICATED(1010, "Unauthenticated", HttpStatus.UNAUTHORIZED)
+    ;
 
     private final int code;
     private final String message;

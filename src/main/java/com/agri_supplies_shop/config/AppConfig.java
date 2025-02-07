@@ -1,14 +1,44 @@
 package com.agri_supplies_shop.config;
 
+import com.agri_supplies_shop.entity.Users;
+import com.agri_supplies_shop.enums.PredefinedRole;
+import com.agri_supplies_shop.repository.RoleRepository;
+import com.agri_supplies_shop.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.ZonedDateTime;
 
 @Configuration
+@Slf4j
 public class AppConfig {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
+        return args -> {
+            if (userRepository.findByUserName("admin").isEmpty()) {
+                Users user = Users.builder()
+                        .userName("admin")
+                        .password(passwordEncoder.encode("admin"))
+                        .role(roleRepository.findByName(PredefinedRole.ADMIN_ROLE.getName()))
+                        .createdAt(ZonedDateTime.now())
+                        .build();
+                userRepository.save(user);
+                log.warn("admin user has been created with default password: admin, please change it");
+            }
+        };
     }
 }
