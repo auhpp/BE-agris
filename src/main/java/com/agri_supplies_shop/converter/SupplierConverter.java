@@ -12,11 +12,11 @@ public class SupplierConverter {
     @Autowired
     private ModelMapper modelMapper;
 
-    public SupplierResponse toSupplierResponse(Supplier supplier){
+    public SupplierResponse toResponse(Supplier supplier){
         return modelMapper.map(supplier, SupplierResponse.class);
     }
 
-    public Supplier toSupplierEntity(SupplierRequest supplier){
+    public Supplier toEntity(SupplierRequest supplier){
         return modelMapper.map(supplier, Supplier.class);
     }
 }

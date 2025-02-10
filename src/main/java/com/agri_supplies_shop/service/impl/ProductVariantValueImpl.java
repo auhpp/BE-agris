@@ -39,10 +39,10 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
             productVariantValue = productVariantValueRepository.findById(variantValueRequest.getId()).orElseThrow(
                     () -> new AppException(ErrorCode.PRODUCT_VARIANT_VALUE_NOT_FOUND)
             );
-            productVariantValue = variantValueConverter.fromRequestToProductVariantValueEntity(variantValueRequest, productVariantValue);
+            variantValueConverter.toExistsEntity(variantValueRequest, productVariantValue);
 
         } else {
-            productVariantValue = variantValueConverter.toProductVariantValueEntity(variantValueRequest);
+            productVariantValue = variantValueConverter.toEntity(variantValueRequest);
         }
         //Create sku
         List<String> variantIds = variantValueRequest.getVariantCombination().stream().map(
@@ -59,7 +59,7 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
         productVariantValueRepository.save(productVariantValue);
 
 
-        return variantValueConverter.toProductVariantValueResponse(productVariantValue);
+        return variantValueConverter.toResponse(productVariantValue);
     }
 
     @Override

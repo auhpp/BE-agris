@@ -3,10 +3,7 @@ package com.agri_supplies_shop.entity;
 import com.agri_supplies_shop.enums.Gender;
 import com.agri_supplies_shop.enums.Status;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -15,7 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,7 +31,7 @@ public class Users {
 
     private String password;
 
-    private String phone_number;
+    private String phoneNumber;
 
     private String email;
 

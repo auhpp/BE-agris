@@ -1,19 +1,20 @@
 package com.agri_supplies_shop.dto.response;
 
 import com.agri_supplies_shop.enums.Gender;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponse {
+    private Long id;
 
     private String fullName;
 
@@ -23,7 +24,7 @@ public class UserResponse {
 
     private String password;
 
-    private String phone_number;
+    private String phoneNumber;
 
     private String email;
 
@@ -32,4 +33,8 @@ public class UserResponse {
     private Date dateOfBirth;
 
     private String provider;
+
+    private String role;
+
+    private List<AddressResponse> addresses;
 }

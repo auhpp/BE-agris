@@ -23,8 +23,6 @@ import com.agri_supplies_shop.service.ProductVariantValueService;
 import com.agri_supplies_shop.service.VariantValueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,19 +55,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse createAndUpdateProduct(ProductRequest productRequest) {
-        var authenticated = SecurityContextHolder.getContext().getAuthentication();
-
-        log.info("username:", authenticated.getName());
-        log.info("Role:", authenticated.getAuthorities());
-
         Product product = new Product();
         if (productRequest.getId() != null) {
             product = productRepository.findById(productRequest.getId()).orElseThrow(
                     () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
             );
-            product = productConverter.fromRequestToProductEntity(productRequest, product);
+            productConverter.toExistsEntity(productRequest, product);
         } else {
-            product = productConverter.toProductEntity(productRequest);
+            product = productConverter.toEntity(productRequest);
         }
         product.setOrigin(Origin.valueOf(productRequest.getOrigin()));
 
@@ -105,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
                         it ->
                                 productVariantValueService.createProductVariantValue(it, finalProduct)
                 ).toList();
-        ProductResponse response = productConverter.toProductResponse(product);
+        ProductResponse response = productConverter.toResponse(product);
         response.setAttributes(attributeResponses);
         response.setVariants(productVariantValueResponses);
         return response;
@@ -143,7 +136,7 @@ public class ProductServiceImpl implements ProductService {
                 .totalPage((products.size() / size) + 1)
                 .data(
                         products.stream().map(
-                                it -> productConverter.toProductResponse(it)
+                                it -> productConverter.toResponse(it)
                         ).toList()
                 )
                 .build();

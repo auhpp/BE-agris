@@ -16,7 +16,8 @@ public enum ErrorCode {
     VARIANT_VALUE_NOT_FOUND(1007, "Variant value not found", HttpStatus.NOT_FOUND),
     USER_EXISTED(1008, "User existed", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1009, "User not existed", HttpStatus.BAD_REQUEST),
-    UNAUTHENTICATED(1010, "Unauthenticated", HttpStatus.UNAUTHORIZED)
+    UNAUTHENTICATED(1010, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    WRONG_PASSWORD(1011, "WRONG PASSWORD", HttpStatus.BAD_REQUEST)
     ;
 
     private final int code;

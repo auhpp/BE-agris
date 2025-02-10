@@ -20,7 +20,7 @@ public class ProductConverter {
     @Autowired
     private AttributeConverter attributeConverter;
 
-    public Product toProductEntity(ProductRequest request) {
+    public Product toEntity(ProductRequest request) {
         //Fix error: destination class have more field than source class
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         Product product = modelMapper.map(request, Product.class);
@@ -28,11 +28,10 @@ public class ProductConverter {
         return product;
     }
 
-    public Product fromRequestToProductEntity(ProductRequest request, Product product){
+    public void toExistsEntity(ProductRequest request, Product product){
         modelMapper.map(request, product);
-        return product;
     }
-    public ProductResponse toProductResponse(Product product) {
+    public ProductResponse toResponse(Product product) {
         ProductResponse response = modelMapper.map(product, ProductResponse.class);
         //Category
         CategoryResponse categoryResponse = CategoryResponse
@@ -54,7 +53,7 @@ public class ProductConverter {
             List<ProductVariantValueResponse> productVariantValueResponses =
                     product.getProductVariantValues().stream().map(
                             it ->
-                                    pVariantValueConverter.toProductVariantValueResponse(it)
+                                    pVariantValueConverter.toResponse(it)
                     ).toList();
             response.setVariants(productVariantValueResponses);
         }
