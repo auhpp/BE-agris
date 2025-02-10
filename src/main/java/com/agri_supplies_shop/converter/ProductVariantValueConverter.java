@@ -23,14 +23,13 @@ public class ProductVariantValueConverter {
     @Autowired
     private VariantValueRepository variantValueRepository;
 
-    public ProductVariantValue toProductVariantValueEntity(VariantValueRequest request){
+    public ProductVariantValue toEntity(VariantValueRequest request){
         return modelMapper.map(request, ProductVariantValue.class);
     }
-    public ProductVariantValue fromRequestToProductVariantValueEntity(VariantValueRequest request, ProductVariantValue variantValue){
+    public void toExistsEntity(VariantValueRequest request, ProductVariantValue variantValue){
         modelMapper.map(request, variantValue);
-        return variantValue;
     }
-    public ProductVariantValueResponse toProductVariantValueResponse(ProductVariantValue request) {
+    public ProductVariantValueResponse toResponse(ProductVariantValue request) {
         ProductVariantValueResponse response = modelMapper.map(request, ProductVariantValueResponse.class);
         Long priceNum = request.getPrice();
         Long oldPrice = null;

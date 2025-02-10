@@ -20,7 +20,6 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +38,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private InvalidatedTokenRepository invalidatedTokenRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Value("${jwt.signer-key}")
     private String SIGNER_KEY;
 
@@ -50,14 +52,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws JOSEException {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         Users user = userRepository.findByUserName(request.getUserName()).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
         AuthenticationResponse response = new AuthenticationResponse();
-        response.setAuthenticated(passwordEncoder.matches(request.getPassword(), user.getPassword()));
-        String token = generateToken(user);
-        response.setToken(token);
+        boolean valid = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        if (valid) {
+            String token = generateToken(user);
+            response.setToken(token);
+        }
+        else{
+            throw new AppException(ErrorCode.WRONG_PASSWORD);
+        }
+        response.setAuthenticated(true);
         return response;
     }
 

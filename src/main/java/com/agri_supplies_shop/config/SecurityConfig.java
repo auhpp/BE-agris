@@ -20,6 +20,9 @@ public class SecurityConfig {
             "/user", "/auth/token", "/product/search", "/auth/introspect", "/auth/logout", "/auth/refresh"
     };
 
+    private final String[] PRIVATE_ENDPOINTS = {
+            "/product"
+    };
     @Autowired
     private CustomJwtDecoder jwtDecoder;
 
@@ -29,7 +32,7 @@ public class SecurityConfig {
         //Config api endpoint need authenticated and unauthenticated
         httpSecurity.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/product").hasAuthority("SCOPE_" + PredefinedRole.ADMIN_ROLE.getName())
+                        .requestMatchers(HttpMethod.POST, PRIVATE_ENDPOINTS).hasAuthority("SCOPE_" + PredefinedRole.ADMIN_ROLE.getName())
                         .anyRequest().authenticated()
         );
         //Config oauth2 for jwt to verify token on header
@@ -45,10 +48,7 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
+
 
 
 }

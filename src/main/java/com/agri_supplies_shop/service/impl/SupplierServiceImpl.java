@@ -20,8 +20,8 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public SupplierResponse createSupplier(SupplierRequest request) {
-        Supplier supplier = supplierConverter.toSupplierEntity(request);
+        Supplier supplier = supplierConverter.toEntity(request);
         supplierRepository.save(supplier);
-        return supplierConverter.toSupplierResponse(supplier);
+        return supplierConverter.toResponse(supplier);
     }
 }

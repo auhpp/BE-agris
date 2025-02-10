@@ -22,7 +22,7 @@ public class UserRequest {
 
     private String password;
 
-    private String phone_number;
+    private String phoneNumber;
 
     private String email;
 
