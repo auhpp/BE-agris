@@ -17,7 +17,8 @@ public enum ErrorCode {
     USER_EXISTED(1008, "User existed", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1009, "User not existed", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1010, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    WRONG_PASSWORD(1011, "WRONG PASSWORD", HttpStatus.BAD_REQUEST)
+    WRONG_PASSWORD(1011, "Wrong password", HttpStatus.BAD_REQUEST),
+    CART_ITEM_NOT_FOUND(1012, "Cart item not found", HttpStatus.BAD_REQUEST)
     ;
 
     private final int code;
