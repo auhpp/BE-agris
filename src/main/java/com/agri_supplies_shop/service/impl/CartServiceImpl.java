@@ -1,0 +1,85 @@
+package com.agri_supplies_shop.service.impl;
+
+import com.agri_supplies_shop.converter.CartConverter;
+import com.agri_supplies_shop.dto.request.CartItemRequest;
+import com.agri_supplies_shop.dto.response.CartItemResponse;
+import com.agri_supplies_shop.dto.response.PageResponse;
+import com.agri_supplies_shop.entity.CartItem;
+import com.agri_supplies_shop.entity.ProductVariantValue;
+import com.agri_supplies_shop.entity.Users;
+import com.agri_supplies_shop.exception.AppException;
+import com.agri_supplies_shop.exception.ErrorCode;
+import com.agri_supplies_shop.repository.CartRepository;
+import com.agri_supplies_shop.repository.ProductVariantValueRepository;
+import com.agri_supplies_shop.repository.UserRepository;
+import com.agri_supplies_shop.service.CartService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CartServiceImpl implements CartService {
+    @Autowired
+    private ProductVariantValueRepository productVariantValueRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private CartConverter cartConverter;
+
+    @Override
+    public CartItemResponse addToCart(CartItemRequest request) {
+        CartItem cartItem;
+        if (request.getId() != null) {
+            cartItem = cartRepository.findById(request.getId()).orElseThrow(
+                    () -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND)
+            );
+            cartConverter.toExistsEntity(request, cartItem);
+        } else {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userName = authentication.getName();
+            Users user = userRepository.findByUserName(userName).orElseThrow(
+                    () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+            );
+            cartItem = cartConverter.toEntity(request);
+            cartItem.setUser(user);
+        }
+        ProductVariantValue productVariant = productVariantValueRepository.findById(request.getProductVariantId())
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_VALUE_NOT_FOUND));
+        cartItem.setProductVariantValue(productVariant);
+        return cartConverter.toResponse(cartRepository.save(cartItem));
+    }
+
+    @Override
+    public PageResponse<CartItemResponse> getAll(int page, int size) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        Users user = userRepository.findByUserName(userName).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<CartItem> pageData = cartRepository.findAllByUserId(user.getId(), pageable);
+        return PageResponse.<CartItemResponse>builder()
+                .currentPage(page)
+                .totalElements(pageData.getTotalElements())
+                .totalPage(pageData.getTotalPages())
+                .pageSize(pageData.getSize())
+                .data(pageData.getContent().stream().map(
+                        it -> cartConverter.toResponse(it)
+                ).toList())
+                .build();
+    }
+
+    @Override
+    public void delete(Long cartItemId) {
+        cartRepository.deleteById(cartItemId);
+    }
+}
