@@ -11,7 +11,6 @@ import com.agri_supplies_shop.entity.Category;
 import com.agri_supplies_shop.entity.Product;
 import com.agri_supplies_shop.entity.Supplier;
 import com.agri_supplies_shop.enums.Origin;
-import com.agri_supplies_shop.enums.Status;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.CategoryRepository;
@@ -21,47 +20,44 @@ import com.agri_supplies_shop.service.AttributeService;
 import com.agri_supplies_shop.service.ProductService;
 import com.agri_supplies_shop.service.ProductVariantValueService;
 import com.agri_supplies_shop.service.VariantValueService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Slf4j
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductServiceImpl implements ProductService {
-    @Autowired
-    private ProductRepository productRepository;
+    ProductRepository productRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    CategoryRepository categoryRepository;
 
-    @Autowired
-    private SupplierRepository supplierRepository;
+    SupplierRepository supplierRepository;
 
-    @Autowired
-    private ProductConverter productConverter;
+    ProductConverter productConverter;
 
-    @Autowired
-    private VariantValueService variantService;
+    VariantValueService variantService;
 
-    @Autowired
-    private ProductVariantValueService productVariantValueService;
+    ProductVariantValueService productVariantValueService;
 
-    @Autowired
-    private AttributeService attributeService;
+    AttributeService attributeService;
 
     @Override
     @Transactional
-    public ProductResponse createAndUpdateProduct(ProductRequest productRequest) {
-        Product product = new Product();
+    public ProductResponse createAndUpdate(ProductRequest productRequest) {
+        Product product;
         if (productRequest.getId() != null) {
+            //Update
             product = productRepository.findById(productRequest.getId()).orElseThrow(
                     () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
             );
             productConverter.toExistsEntity(productRequest, product);
         } else {
+            //create
             product = productConverter.toEntity(productRequest);
         }
         product.setOrigin(Origin.valueOf(productRequest.getOrigin()));
@@ -80,24 +76,25 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
 
         //Save attribute
-        Product finalProduct = product;
+        Long productId = product.getId();
         List<AttributeResponse> attributeResponses =
                 productRequest.getAttributes().stream().map(
                         it ->
-                                attributeService.createAttribute(it, finalProduct)
+                                attributeService.create(it, productId)
                 ).toList();
         //Save variant
         productRequest.getVariants().forEach(
                 it ->
-                        variantService.createVariantValue(it)
+                        variantService.create(it)
         );
 
         //save product variant value
         List<ProductVariantValueResponse> productVariantValueResponses =
                 productRequest.getVariantValues().stream().map(
                         it ->
-                                productVariantValueService.createProductVariantValue(it, finalProduct)
+                                productVariantValueService.create(it, productId)
                 ).toList();
+        //To response
         ProductResponse response = productConverter.toResponse(product);
         response.setAttributes(attributeResponses);
         response.setVariants(productVariantValueResponses);
@@ -106,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void deleteProduct(List<Long> ids) {
+    public void delete(List<Long> ids) {
         ids.forEach(
                 it -> {
                     Product product = productRepository.findById(it).orElseThrow(
@@ -115,19 +112,16 @@ public class ProductServiceImpl implements ProductService {
                     List<Long> pVariantIds = product.getProductVariantValues().stream().map(
                             pVariantValue -> pVariantValue.getId()
                     ).toList();
-                    productVariantValueService.deleteProductVariant(pVariantIds);
-                    if (product.getProductVariantValues().isEmpty()) {
+                    Boolean stateDel = productVariantValueService.delete(pVariantIds);
+                    if (stateDel) {
                         productRepository.deleteById(it);
-                    } else {
-                        product.setStatus(Status.INACTIVE);
-                        productRepository.save(product);
                     }
                 }
         );
     }
 
     @Override
-    public PageResponse<ProductResponse> findProduct(SearchProductRequest searchProductRequest, int page, int size) {
+    public PageResponse<ProductResponse> find(SearchProductRequest searchProductRequest, int page, int size) {
         List<Product> products = productRepository.findProduct(searchProductRequest, page, size);
         return PageResponse.<ProductResponse>builder()
                 .currentPage(page)
@@ -140,6 +134,13 @@ public class ProductServiceImpl implements ProductService {
                         ).toList()
                 )
                 .build();
+    }
+
+    @Override
+    public ProductResponse findById(Long id) {
+        return productConverter.toResponse(productRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
+        ));
     }
 
 

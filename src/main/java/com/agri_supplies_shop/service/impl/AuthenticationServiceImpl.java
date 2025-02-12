@@ -18,7 +18,10 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,23 +33,24 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationServiceImpl implements AuthenticationService {
+    UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    InvalidatedTokenRepository invalidatedTokenRepository;
 
-    @Autowired
-    private InvalidatedTokenRepository invalidatedTokenRepository;
+    PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    @NonFinal
     @Value("${jwt.signer-key}")
     private String SIGNER_KEY;
 
+    @NonFinal
     @Value("${jwt.valid-duration}")
     private long VALID_DURATION;
 
+    @NonFinal
     @Value("${jwt.refreshable-duration}")
     private long REFRESHABLE_DURATION;
 
@@ -152,8 +156,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .expirationTime(new Date(
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()
                 ))
-                .jwtID(UUID.randomUUID().toString())
-                .claim("scope", user.getRole().getName())
+                .jwtID(UUID.randomUUID().toString()) //Use for refresh token task
+                .claim("scope", user.getRole().getName()) //Use for phan quyen
                 .build();
         //Payload
         Payload payload = new Payload(claimsSet.toJSONObject());

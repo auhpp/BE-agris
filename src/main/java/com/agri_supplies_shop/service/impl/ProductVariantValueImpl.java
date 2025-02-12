@@ -4,48 +4,50 @@ package com.agri_supplies_shop.service.impl;
 import com.agri_supplies_shop.converter.ProductVariantValueConverter;
 import com.agri_supplies_shop.dto.request.VariantValueRequest;
 import com.agri_supplies_shop.dto.response.ProductVariantValueResponse;
-import com.agri_supplies_shop.entity.Product;
 import com.agri_supplies_shop.entity.ProductVariantValue;
 import com.agri_supplies_shop.entity.VariantValue;
 import com.agri_supplies_shop.enums.Status;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
+import com.agri_supplies_shop.repository.ProductRepository;
 import com.agri_supplies_shop.repository.ProductVariantValueRepository;
 import com.agri_supplies_shop.repository.VariantValueRepository;
 import com.agri_supplies_shop.service.ProductVariantValueService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductVariantValueImpl implements ProductVariantValueService {
-    @Autowired
-    private VariantValueRepository variantValueRepository;
+    VariantValueRepository variantValueRepository;
 
-    @Autowired
-    private ProductVariantValueRepository productVariantValueRepository;
+    ProductVariantValueRepository productVariantValueRepository;
 
-    @Autowired
-    private ProductVariantValueConverter variantValueConverter;
+    ProductVariantValueConverter variantValueConverter;
+
+    ProductRepository productRepository;
 
     @Override
     @Transactional
-    public ProductVariantValueResponse createProductVariantValue(VariantValueRequest variantValueRequest, Product product) {
+    public ProductVariantValueResponse create(VariantValueRequest request, Long productId) {
         //Product variant value
         ProductVariantValue productVariantValue;
-        if (variantValueRequest.getId() != null) {
-            productVariantValue = productVariantValueRepository.findById(variantValueRequest.getId()).orElseThrow(
+        if (request.getId() != null) {
+            productVariantValue = productVariantValueRepository.findById(request.getId()).orElseThrow(
                     () -> new AppException(ErrorCode.PRODUCT_VARIANT_VALUE_NOT_FOUND)
             );
-            variantValueConverter.toExistsEntity(variantValueRequest, productVariantValue);
-
+            variantValueConverter.toExistsEntity(request, productVariantValue);
         } else {
-            productVariantValue = variantValueConverter.toEntity(variantValueRequest);
+            productVariantValue = variantValueConverter.toEntity(request);
         }
         //Create sku
-        List<String> variantIds = variantValueRequest.getVariantCombination().stream().map(
+        List<String> variantIds = request.getVariantCombination().stream().map(
                 it -> {
                     VariantValue variantValue = variantValueRepository.findByValue(it);
                     return variantValue.getId().toString();
@@ -53,17 +55,17 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
         ).toList();
         String sku = String.join("-", variantIds);
         productVariantValue.setSku(sku);
-        productVariantValue.setProduct(product);
+        productVariantValue.setProduct(productRepository.findById(productId).orElseThrow(
+                () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
+        ));
         productVariantValue.setStatus(Status.ACTIVE);
         //Save product variant value
-        productVariantValueRepository.save(productVariantValue);
-
-
-        return variantValueConverter.toResponse(productVariantValue);
+        return variantValueConverter.toResponse(productVariantValueRepository.save(productVariantValue));
     }
 
     @Override
-    public void deleteProductVariant(List<Long> ids) {
+    @Transactional
+    public Boolean delete(List<Long> ids) {
         ids.forEach(
                 it -> {
                     ProductVariantValue productVariant = productVariantValueRepository.findById(it).orElseThrow(
@@ -71,12 +73,11 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
                     );
                     if (productVariant.getOrderItems().isEmpty()) {
                         productVariantValueRepository.deleteById(it);
-                    }
-                    else{
-                        productVariant.setStatus(Status.INACTIVE);
-                        productVariantValueRepository.save(productVariant);
+                    } else {
+                        throw new AppException(ErrorCode.DELETE_FAILED);
                     }
                 }
         );
+        return true;
     }
 }

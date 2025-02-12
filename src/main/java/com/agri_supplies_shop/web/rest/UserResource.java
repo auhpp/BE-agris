@@ -5,17 +5,23 @@ import com.agri_supplies_shop.dto.request.AuthenticationRequest;
 import com.agri_supplies_shop.dto.request.UserRequest;
 import com.agri_supplies_shop.dto.response.AddressResponse;
 import com.agri_supplies_shop.dto.response.ApiResponse;
+import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.UserResponse;
 import com.agri_supplies_shop.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserResource {
 
-    @Autowired
-    private UserService userService;
+    UserService userService;
 
     @PostMapping
     public ApiResponse<UserResponse> createUser(@RequestBody UserRequest request) {
@@ -33,12 +39,27 @@ public class UserResource {
                 .build();
     }
 
+    @GetMapping
+    public ApiResponse<PageResponse<UserResponse>> getAllUser(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                              @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    ) {
+        return ApiResponse.<PageResponse<UserResponse>>builder()
+                .code(200)
+                .result(userService.getAllUser(page, size))
+                .build();
+    }
+
     @PostMapping("/{id}")
     public ApiResponse<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .code(200)
                 .result(userService.updateUser(id, request))
                 .build();
+    }
+
+    @DeleteMapping("/{ids}")
+    public void deleteUser(@PathVariable(name = "ids") List<Long> ids) {
+        userService.deleteUser(ids);
     }
 
     @PostMapping("/{userId}/role/{roleId}")
@@ -58,7 +79,7 @@ public class UserResource {
                 .build();
     }
 
-    @PostMapping("/address/{addressId}")
+    @DeleteMapping("/address/{addressId}")
     public void deleteAddress(@PathVariable("addressId") Long addressId) {
         userService.deleteAddress(addressId);
     }

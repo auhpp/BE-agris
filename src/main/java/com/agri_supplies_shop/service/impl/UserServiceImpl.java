@@ -4,9 +4,9 @@ import com.agri_supplies_shop.converter.AddressConverter;
 import com.agri_supplies_shop.converter.UserConverter;
 import com.agri_supplies_shop.dto.request.AddressRequest;
 import com.agri_supplies_shop.dto.request.AuthenticationRequest;
-import com.agri_supplies_shop.dto.request.LogoutRequest;
 import com.agri_supplies_shop.dto.request.UserRequest;
 import com.agri_supplies_shop.dto.response.AddressResponse;
+import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.UserResponse;
 import com.agri_supplies_shop.entity.Address;
 import com.agri_supplies_shop.entity.Role;
@@ -17,39 +17,38 @@ import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.AddressRepository;
 import com.agri_supplies_shop.repository.RoleRepository;
 import com.agri_supplies_shop.repository.UserRepository;
-import com.agri_supplies_shop.service.AuthenticationService;
 import com.agri_supplies_shop.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    RoleRepository roleRepository;
 
-    @Autowired
-    private AddressRepository addressRepository;
+    AddressRepository addressRepository;
 
-    @Autowired
-    private UserConverter userConverter;
+    UserConverter userConverter;
 
-    @Autowired
-    private AddressConverter addressConverter;
+    AddressConverter addressConverter;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthenticationService authenticationService;
+    PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse createUser(UserRequest request) {
@@ -97,6 +96,27 @@ public class UserServiceImpl implements UserService {
         return userConverter.toResponse(
                 userRepository.save(user)
         );
+    }
+
+    @Override
+    public PageResponse<UserResponse> getAllUser(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Users> pageData = userRepository.findAll(pageable);
+        return PageResponse.<UserResponse>builder()
+                .currentPage(page)
+                .totalElements(pageData.getTotalElements())
+                .totalPage(pageData.getTotalPages())
+                .pageSize(pageData.getSize())
+                .data(pageData.getContent().stream().map(
+                        it -> userConverter.toResponse(it)
+                ).toList())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(List<Long> ids) {
+        userRepository.deleteByIdIn(ids);
     }
 
     @Override

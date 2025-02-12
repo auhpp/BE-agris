@@ -3,22 +3,23 @@ package com.agri_supplies_shop.converter;
 import com.agri_supplies_shop.dto.request.ProductRequest;
 import com.agri_supplies_shop.dto.response.*;
 import com.agri_supplies_shop.entity.Product;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductConverter {
-    @Autowired
-    private ModelMapper modelMapper;
+    ModelMapper modelMapper;
 
-    @Autowired
-    private ProductVariantValueConverter pVariantValueConverter;
+    ProductVariantValueConverter pVariantValueConverter;
 
-    @Autowired
-    private AttributeConverter attributeConverter;
+    AttributeConverter attributeConverter;
 
     public Product toEntity(ProductRequest request) {
         //Fix error: destination class have more field than source class
@@ -62,7 +63,7 @@ public class ProductConverter {
             List<AttributeResponse> attributeResponses =
                     product.getProductAttributeValues().stream().map(
                             it ->
-                                    attributeConverter.toAttributeResponse(it)
+                                    attributeConverter.toResponse(it)
                     ).toList();
 
             response.setAttributes(attributeResponses);

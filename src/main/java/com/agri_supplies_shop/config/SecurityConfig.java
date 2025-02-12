@@ -8,20 +8,26 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ENDPOINTS = {
+    private final String[] PUBLIC_POST_ENDPOINTS = {
             "/user", "/auth/token", "/product/search", "/auth/introspect", "/auth/logout", "/auth/refresh"
     };
-
-    private final String[] PRIVATE_ENDPOINTS = {
-            "/product"
+    private final String[] PUBLIC_GET_ENDPOINTS = {
+            "/product/search/**", "/category"
+    };
+    private final String[] PRIVATE_POST_ENDPOINTS = {
+            "/product", "/category"
+    };
+    private final String[] PRIVATE_GET_ENDPOINTS = {
+            "/supplier", "/user"
+    };
+    private final String[] PRIVATE_DELETE_ENDPOINTS = {
+            "/product/**", "/user", "/category", "/supplier"
     };
     @Autowired
     private CustomJwtDecoder jwtDecoder;
@@ -31,8 +37,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         //Config api endpoint need authenticated and unauthenticated
         httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.POST, PRIVATE_ENDPOINTS).hasAuthority("SCOPE_" + PredefinedRole.ADMIN_ROLE.getName())
+                request.requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.POST, PRIVATE_POST_ENDPOINTS).hasAuthority("SCOPE_" + PredefinedRole.ADMIN_ROLE.getName())
+                        .requestMatchers(HttpMethod.GET, PRIVATE_GET_ENDPOINTS).hasAuthority("SCOPE_" + PredefinedRole.ADMIN_ROLE.getName())
+                        .requestMatchers(HttpMethod.DELETE, PRIVATE_DELETE_ENDPOINTS).hasAuthority("SCOPE_" + PredefinedRole.ADMIN_ROLE.getName())
                         .anyRequest().authenticated()
         );
         //Config oauth2 for jwt to verify token on header
