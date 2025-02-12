@@ -6,36 +6,38 @@ import com.agri_supplies_shop.entity.VariantValue;
 import com.agri_supplies_shop.repository.VariantRepository;
 import com.agri_supplies_shop.repository.VariantValueRepository;
 import com.agri_supplies_shop.service.VariantValueService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class VariantValueServiceImpl implements VariantValueService {
-    @Autowired
-    private VariantValueRepository variantValueRepository;
+    VariantValueRepository variantValueRepository;
 
-    @Autowired
-    private VariantRepository variantRepository;
+    VariantRepository variantRepository;
 
     @Override
     @Transactional
-    public void createVariantValue(VariantRequest variantRequest) {
+    public void create(VariantRequest request) {
         //Variant
-        Variant variant = variantRepository.findByName(variantRequest.getName());
+        Variant variant = variantRepository.findByName(request.getName());
         if (variant == null) {
-            variant = Variant.builder().name(variantRequest.getName()).build();
+            variant = Variant.builder().name(request.getName()).build();
             variantRepository.save(variant);
         }
 
         //Variant value
         Variant finalVariant = variant;
-        List<VariantValue> variantValues = variantRequest.getValues().stream().map(
+        List<VariantValue> variantValues = request.getValues().stream().map(
                 it -> {
                     VariantValue variantValue = variantValueRepository.findByValue(it);
-                    if(variantValue == null)
+                    if (variantValue == null)
                         return VariantValue.builder().value(it).variant(finalVariant).build();
                     else
                         return variantValue;

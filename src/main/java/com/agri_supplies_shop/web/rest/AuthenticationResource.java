@@ -9,6 +9,9 @@ import com.agri_supplies_shop.dto.response.AuthenticationResponse;
 import com.agri_supplies_shop.dto.response.IntrospectResponse;
 import com.agri_supplies_shop.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,10 +22,11 @@ import java.text.ParseException;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationResource {
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    AuthenticationService authenticationService;
 
     @PostMapping("/token")
     public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) throws JOSEException {

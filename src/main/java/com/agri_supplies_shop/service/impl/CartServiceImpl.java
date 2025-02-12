@@ -13,7 +13,9 @@ import com.agri_supplies_shop.repository.CartRepository;
 import com.agri_supplies_shop.repository.ProductVariantValueRepository;
 import com.agri_supplies_shop.repository.UserRepository;
 import com.agri_supplies_shop.service.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,18 +24,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CartServiceImpl implements CartService {
-    @Autowired
-    private ProductVariantValueRepository productVariantValueRepository;
+    ProductVariantValueRepository productVariantValueRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
-    @Autowired
-    private CartRepository cartRepository;
+    CartRepository cartRepository;
 
-    @Autowired
-    private CartConverter cartConverter;
+    CartConverter cartConverter;
 
     @Override
     public CartItemResponse addToCart(CartItemRequest request) {

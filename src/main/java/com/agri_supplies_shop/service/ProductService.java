@@ -6,10 +6,10 @@ import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.ProductResponse;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public interface ProductService {
-    ProductResponse createAndUpdateProduct(ProductRequest productRequest);
-    void deleteProduct(List<Long> ids);
-    PageResponse<ProductResponse> findProduct(SearchProductRequest searchProductRequest, int page, int size);
+    ProductResponse createAndUpdate(ProductRequest productRequest);
+    void delete(List<Long> ids);
+    PageResponse<ProductResponse> find(SearchProductRequest searchProductRequest, int page, int size);
+    ProductResponse findById(Long id);
 }

@@ -5,14 +5,17 @@ import com.agri_supplies_shop.dto.response.ApiResponse;
 import com.agri_supplies_shop.dto.response.CartItemResponse;
 import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.service.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cart")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CartResource {
-    @Autowired
-    private CartService cartService;
+    CartService cartService;
 
     @PostMapping
     public ApiResponse<CartItemResponse> addTCart(@RequestBody CartItemRequest request) {
@@ -33,7 +36,7 @@ public class CartResource {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id){
+    public void delete(@PathVariable("id") Long id) {
         cartService.delete(id);
     }
 }

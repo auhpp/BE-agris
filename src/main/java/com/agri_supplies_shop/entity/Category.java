@@ -39,7 +39,7 @@ public class Category {
     @JoinColumn
     private Category parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = {CascadeType.REMOVE})
     private List<Category> categories;
 
     //product

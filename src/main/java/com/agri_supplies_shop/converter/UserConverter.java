@@ -4,19 +4,21 @@ import com.agri_supplies_shop.dto.request.UserRequest;
 import com.agri_supplies_shop.dto.response.AddressResponse;
 import com.agri_supplies_shop.dto.response.UserResponse;
 import com.agri_supplies_shop.entity.Users;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserConverter {
-    @Autowired
-    private ModelMapper modelMapper;
+    ModelMapper modelMapper;
 
-    @Autowired
-    private AddressConverter addressConverter;
+    AddressConverter addressConverter;
 
     public Users toEntity(UserRequest request) {
         return modelMapper.map(request, Users.class);

@@ -8,20 +8,22 @@ import com.agri_supplies_shop.entity.VariantValue;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.VariantValueRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductVariantValueConverter {
-    @Autowired
-    private ModelMapper modelMapper;
+    ModelMapper modelMapper;
 
-    @Autowired
-    private VariantValueRepository variantValueRepository;
+    VariantValueRepository variantValueRepository;
 
     public ProductVariantValue toEntity(VariantValueRequest request){
         return modelMapper.map(request, ProductVariantValue.class);
@@ -41,7 +43,6 @@ public class ProductVariantValueConverter {
             } else if (request.getDiscountUnit().equals("đ")) {
                 priceNum = priceNum - request.getDiscount();
             }
-
             discount = request.getDiscount() + request.getDiscountUnit();
         }
         response.setPrice(priceNum);
@@ -59,6 +60,7 @@ public class ProductVariantValueConverter {
                                 () -> new AppException(ErrorCode.VARIANT_VALUE_NOT_FOUND)
                         )
         ).toList();
+        //To variant  response
         List<VariantResponse> variantResponses = variants.stream().map(
                 it -> VariantResponse
                         .builder()

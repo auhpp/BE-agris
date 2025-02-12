@@ -3,14 +3,17 @@ package com.agri_supplies_shop.converter;
 import com.agri_supplies_shop.dto.request.AddressRequest;
 import com.agri_supplies_shop.dto.response.AddressResponse;
 import com.agri_supplies_shop.entity.Address;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AddressConverter {
-    @Autowired
-    private ModelMapper modelMapper;
+    ModelMapper modelMapper;
 
     public Address toEntity(AddressRequest request){
         return modelMapper.map(request, Address.class);
