@@ -24,7 +24,7 @@ public class SecurityConfig {
             "/product", "/category"
     };
     private final String[] PRIVATE_GET_ENDPOINTS = {
-            "/supplier", "/user"
+            "/supplier", "/user", "/role"
     };
     private final String[] PRIVATE_DELETE_ENDPOINTS = {
             "/product/**", "/user", "/category", "/supplier"
