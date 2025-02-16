@@ -1,7 +1,6 @@
 package com.agri_supplies_shop.entity;
 
 import com.agri_supplies_shop.enums.Origin;
-import com.agri_supplies_shop.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -38,24 +37,14 @@ public class Product {
     @Column(nullable = false)
     private LocalDate expiry;
 
-    @Column(nullable = false)
-    private Long stock;
-
-    private Float rating;
-
     @Column(columnDefinition = "TEXT")
-    private String image;
-
-    private long totalSold;
+    private String thumbnail;
 
     @CreatedDate
     private ZonedDateTime createdAt;
 
     @LastModifiedDate
     private ZonedDateTime updatedAt;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
 
     //Relationship
     //supplier

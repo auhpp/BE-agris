@@ -23,9 +23,7 @@ public class ProductResponse {
 
     private LocalDate expiry;
 
-    private Long stock;
-
-    private String image;
+    private String thumbnail;
 
     private CategoryResponse category;
 

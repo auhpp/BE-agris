@@ -1,18 +1,13 @@
 package com.agri_supplies_shop.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.*;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,12 +21,6 @@ public class Role {
     private String name;
 
     private String description;
-
-    @CreatedDate
-    private ZonedDateTime created_at;
-
-    @LastModifiedDate
-    private ZonedDateTime updated_at;
 
     //Relationship
     //user

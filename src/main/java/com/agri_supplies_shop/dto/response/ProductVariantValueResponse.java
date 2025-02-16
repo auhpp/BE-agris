@@ -18,5 +18,6 @@ public class ProductVariantValueResponse {
     private Long price;
     private Long oldPrice;
     private String discount;
+    private String thumbnail;
     private List<VariantResponse> variantValues;
 }

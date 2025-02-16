@@ -3,10 +3,7 @@ package com.agri_supplies_shop.entity;
 import com.agri_supplies_shop.enums.OrderDetailStatus;
 import com.agri_supplies_shop.enums.PaymentStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -14,7 +11,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +28,7 @@ public class OrderDetail {
 
     private Long amount;
 
-    private String provider;
+    private String paymentProvider;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;

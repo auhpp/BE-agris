@@ -25,9 +25,7 @@ public class ProductRequest {
 
     private LocalDate expiry;
 
-    private Long stock;
-
-    private String image;
+    private String thumbnail;
 
     private Long categoryId;
 

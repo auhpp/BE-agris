@@ -1,11 +1,9 @@
 package com.agri_supplies_shop.entity;
 
 import com.agri_supplies_shop.enums.Gender;
-import com.agri_supplies_shop.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -40,17 +38,9 @@ public class Users {
 
     private Date dateOfBirth;
 
-    private String provider;
-
     @Column(nullable = false)
     @CreatedDate
     private ZonedDateTime createdAt;
-
-    @LastModifiedDate
-    private ZonedDateTime updatedAt;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
 
     //Relationship
     //Role

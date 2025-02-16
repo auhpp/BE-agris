@@ -58,7 +58,6 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
         productVariantValue.setProduct(productRepository.findById(productId).orElseThrow(
                 () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
         ));
-        productVariantValue.setStatus(Status.ACTIVE);
         //Save product variant value
         return variantValueConverter.toResponse(productVariantValueRepository.save(productVariantValue));
     }

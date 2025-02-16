@@ -1,18 +1,13 @@
 package com.agri_supplies_shop.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.*;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,12 +19,6 @@ public class Variant {
 
     @Column(nullable = false)
     private String name;
-
-    @CreatedDate
-    private ZonedDateTime createdAt;
-
-    @LastModifiedDate
-    private ZonedDateTime updatedAt;
 
     //Relationship
     @OneToMany(mappedBy = "variant", cascade = {CascadeType.PERSIST})
