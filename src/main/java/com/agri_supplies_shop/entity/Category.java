@@ -1,12 +1,8 @@
 package com.agri_supplies_shop.entity;
 
-import com.agri_supplies_shop.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
@@ -23,15 +19,6 @@ public class Category {
 
     @Column(nullable = false)
     private String name;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
-    @CreatedDate
-    private ZonedDateTime createdAt;
-
-    @LastModifiedDate
-    private ZonedDateTime updatedAt;
 
     //relationship
     //category

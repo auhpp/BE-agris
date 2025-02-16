@@ -2,10 +2,7 @@ package com.agri_supplies_shop.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
@@ -26,12 +23,6 @@ public class Supplier {
     private String email;
 
     private String phoneNumber;
-
-    @CreatedDate
-    private ZonedDateTime createdAt;
-
-    @LastModifiedDate
-    private ZonedDateTime updatedAt;
 
     //Relationship
     //product

@@ -43,7 +43,6 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = Category
                 .builder()
                 .name(categoryRequest.getName())
-                .status(Status.ACTIVE)
                 .parent(parent)
                 .build();
         categoryRepository.save(category);

@@ -29,6 +29,4 @@ public class UserRequest {
     private Gender gender;
 
     private Date dateOfBirth;
-
-    private String provider;
 }

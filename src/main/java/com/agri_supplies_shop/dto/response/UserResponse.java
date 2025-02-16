@@ -32,8 +32,6 @@ public class UserResponse {
 
     private Date dateOfBirth;
 
-    private String provider;
-
     private String role;
 
     private List<AddressResponse> addresses;
