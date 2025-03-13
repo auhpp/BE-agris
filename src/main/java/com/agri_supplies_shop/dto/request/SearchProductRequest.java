@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class SearchProductRequest {
     private String name;
     private Long categoryId;
+    private String categoryName;
     private Integer priceFrom;
     private Integer priceTo;
 }

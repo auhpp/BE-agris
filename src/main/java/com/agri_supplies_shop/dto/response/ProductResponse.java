@@ -33,4 +33,6 @@ public class ProductResponse {
 
     private List<ProductVariantValueResponse> variants;
 
+    private List<ImageResponse> images;
+
 }

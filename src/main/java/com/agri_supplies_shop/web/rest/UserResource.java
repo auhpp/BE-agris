@@ -2,17 +2,18 @@ package com.agri_supplies_shop.web.rest;
 
 import com.agri_supplies_shop.dto.request.AddressRequest;
 import com.agri_supplies_shop.dto.request.AuthenticationRequest;
+import com.agri_supplies_shop.dto.request.PasswordRequest;
 import com.agri_supplies_shop.dto.request.UserRequest;
-import com.agri_supplies_shop.dto.response.AddressResponse;
-import com.agri_supplies_shop.dto.response.ApiResponse;
-import com.agri_supplies_shop.dto.response.PageResponse;
-import com.agri_supplies_shop.dto.response.UserResponse;
+import com.agri_supplies_shop.dto.response.*;
+import com.agri_supplies_shop.service.ImageService;
 import com.agri_supplies_shop.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,7 @@ import java.util.List;
 public class UserResource {
 
     UserService userService;
+    ImageService imageService;
 
     @PostMapping
     public ApiResponse<UserResponse> createUser(@RequestBody UserRequest request) {
@@ -55,7 +57,7 @@ public class UserResource {
                 .code(200)
                 .result(userService.updateUser(id, request))
                 .build();
-    }
+    }   
 
     @DeleteMapping("/{ids}")
     public void deleteUser(@PathVariable(name = "ids") List<Long> ids) {
@@ -85,10 +87,23 @@ public class UserResource {
     }
 
     @PostMapping("/password")
-    public ApiResponse<UserResponse> updatePassword(@RequestBody AuthenticationRequest request) {
+    public ApiResponse<UserResponse> updatePassword(@RequestBody PasswordRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .code(200)
                 .result(userService.updatePassword(request))
+                .build();
+    }
+
+    @PostMapping("/avatar")
+    public ApiResponse<ImageResponse> uploadAvatar(
+            @RequestParam(value = "customerId", required = false) Long customerId,
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar
+    ) throws IOException {
+        return ApiResponse.<ImageResponse>builder()
+                .code(200)
+                .result(
+                        userService.uploadAvatar(avatar, customerId)
+                )
                 .build();
     }
 }

@@ -3,9 +3,10 @@ package com.agri_supplies_shop.service.impl;
 import com.agri_supplies_shop.converter.AddressConverter;
 import com.agri_supplies_shop.converter.UserConverter;
 import com.agri_supplies_shop.dto.request.AddressRequest;
-import com.agri_supplies_shop.dto.request.AuthenticationRequest;
+import com.agri_supplies_shop.dto.request.PasswordRequest;
 import com.agri_supplies_shop.dto.request.UserRequest;
 import com.agri_supplies_shop.dto.response.AddressResponse;
+import com.agri_supplies_shop.dto.response.ImageResponse;
 import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.UserResponse;
 import com.agri_supplies_shop.entity.Address;
@@ -17,6 +18,7 @@ import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.AddressRepository;
 import com.agri_supplies_shop.repository.RoleRepository;
 import com.agri_supplies_shop.repository.UserRepository;
+import com.agri_supplies_shop.service.ImageService;
 import com.agri_supplies_shop.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -49,6 +53,8 @@ public class UserServiceImpl implements UserService {
     AddressConverter addressConverter;
 
     PasswordEncoder passwordEncoder;
+
+    ImageService imageService;
 
     @Override
     public UserResponse createUser(UserRequest request) {
@@ -73,6 +79,7 @@ public class UserServiceImpl implements UserService {
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
         userConverter.toExistsEntity(request, user);
+        userRepository.save(user);
         return userConverter.toResponse(user);
     }
 
@@ -143,13 +150,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updatePassword(AuthenticationRequest request) {
-        Users user = userRepository.findByUserName(request.getUserName()).orElseThrow(
+    public UserResponse updatePassword(PasswordRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        Users user = userRepository.findByUserName(userName).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
-
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        boolean valid = passwordEncoder.matches(request.getOldPassword(), user.getPassword());
+        if (!valid) {
+            throw new AppException(ErrorCode.WRONG_PASSWORD);
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         return userConverter.toResponse(userRepository.save(user));
+    }
+
+    @Override
+    public ImageResponse uploadAvatar(MultipartFile avatar, Long id) throws IOException {
+        ImageResponse pathUrl = imageService.saveImage(avatar);
+        Users user = userRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
+        user.setAvatar(pathUrl.getFilePath());
+        userRepository.save(user);
+        return pathUrl;
     }
 
 

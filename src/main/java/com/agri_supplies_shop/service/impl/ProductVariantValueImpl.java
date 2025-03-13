@@ -3,22 +3,25 @@ package com.agri_supplies_shop.service.impl;
 
 import com.agri_supplies_shop.converter.ProductVariantValueConverter;
 import com.agri_supplies_shop.dto.request.VariantValueRequest;
+import com.agri_supplies_shop.dto.response.ImageResponse;
 import com.agri_supplies_shop.dto.response.ProductVariantValueResponse;
 import com.agri_supplies_shop.entity.ProductVariantValue;
 import com.agri_supplies_shop.entity.VariantValue;
-import com.agri_supplies_shop.enums.Status;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.ProductRepository;
 import com.agri_supplies_shop.repository.ProductVariantValueRepository;
 import com.agri_supplies_shop.repository.VariantValueRepository;
+import com.agri_supplies_shop.service.ImageService;
 import com.agri_supplies_shop.service.ProductVariantValueService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -33,8 +36,10 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
 
     ProductRepository productRepository;
 
+    ImageService imageService;
+
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {Exception.class, AppException.class})
     public ProductVariantValueResponse create(VariantValueRequest request, Long productId) {
         //Product variant value
         ProductVariantValue productVariantValue;
@@ -42,7 +47,8 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
             productVariantValue = productVariantValueRepository.findById(request.getId()).orElseThrow(
                     () -> new AppException(ErrorCode.PRODUCT_VARIANT_VALUE_NOT_FOUND)
             );
-            variantValueConverter.toExistsEntity(request, productVariantValue);
+//            variantValueConverter.toExistsEntity(request, productVariantValue);
+
         } else {
             productVariantValue = variantValueConverter.toEntity(request);
         }
@@ -79,4 +85,16 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
         );
         return true;
     }
+
+    @Override
+    public ImageResponse uploadThumbnail(MultipartFile file, Long id) throws IOException {
+        ProductVariantValue product = productVariantValueRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.PRODUCT_VARIANT_VALUE_NOT_FOUND)
+        );
+        ImageResponse pathUrl = imageService.saveImage(file);
+        product.setThumbnail(pathUrl.getFilePath());
+        productVariantValueRepository.save(product);
+        return pathUrl;
+    }
+
 }

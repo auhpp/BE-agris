@@ -14,7 +14,7 @@ public class ProductAttributeValue {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "text")
     private String value;
 
     //Relationship

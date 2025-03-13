@@ -17,8 +17,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -62,7 +60,7 @@ public class AttributeServiceImpl implements AttributeService {
 
     @Override
     @Transactional
-    public void deleteById(List<Long> ids) {
-        attributeValueRepository.deleteByIdIn(ids);
+    public void deleteById(Long id) {
+        attributeValueRepository.deleteById(id);
     }
 }

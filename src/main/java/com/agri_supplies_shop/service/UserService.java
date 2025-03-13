@@ -2,11 +2,15 @@ package com.agri_supplies_shop.service;
 
 import com.agri_supplies_shop.dto.request.AddressRequest;
 import com.agri_supplies_shop.dto.request.AuthenticationRequest;
+import com.agri_supplies_shop.dto.request.PasswordRequest;
 import com.agri_supplies_shop.dto.request.UserRequest;
 import com.agri_supplies_shop.dto.response.AddressResponse;
+import com.agri_supplies_shop.dto.response.ImageResponse;
 import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.UserResponse;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -18,5 +22,6 @@ public interface UserService {
     void deleteUser(List<Long> ids);
     AddressResponse createAndUpdateAddress(AddressRequest request);
     void deleteAddress(Long addressId);
-    UserResponse updatePassword(AuthenticationRequest request);
+    UserResponse updatePassword(PasswordRequest request);
+    ImageResponse uploadAvatar(MultipartFile avatar, Long id) throws IOException;
 }

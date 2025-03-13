@@ -3,6 +3,7 @@ package com.agri_supplies_shop.converter;
 import com.agri_supplies_shop.dto.request.ProductRequest;
 import com.agri_supplies_shop.dto.response.*;
 import com.agri_supplies_shop.entity.Product;
+import com.agri_supplies_shop.enums.Origin;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,9 +30,18 @@ public class ProductConverter {
         return product;
     }
 
-    public void toExistsEntity(ProductRequest request, Product product){
-        modelMapper.map(request, product);
+    public Product toExistsEntity(ProductRequest request, Product product) {
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setOrigin(Origin.valueOf(request.getOrigin()));
+        product.setProductionDate(request.getProductionDate());
+        product.setExpiry(request.getExpiry());
+        if (request.getThumbnail() != null) {
+            product.setThumbnail(request.getThumbnail());
+        }
+        return product;
     }
+
     public ProductResponse toResponse(Product product) {
         ProductResponse response = modelMapper.map(product, ProductResponse.class);
         //Category
@@ -67,6 +77,16 @@ public class ProductConverter {
                     ).toList();
 
             response.setAttributes(attributeResponses);
+        }
+
+        //image
+        if (product.getProductImages() != null) {
+            List<ImageResponse> imageResponses = product.getProductImages()
+                    .stream().map(
+                            it -> ImageResponse.builder().id(it.getId())
+                                    .filePath(it.getPath()).build()
+                    ).toList();
+            response.setImages(imageResponses);
         }
         return response;
     }

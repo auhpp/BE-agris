@@ -21,14 +21,6 @@ public class Category {
     private String name;
 
     //relationship
-    //category
-    @ManyToOne
-    @JoinColumn
-    private Category parent;
-
-    @OneToMany(mappedBy = "parent", cascade = {CascadeType.REMOVE})
-    private List<Category> categories;
-
     //product
     @OneToMany(mappedBy = "category")
     private List<Product> products;

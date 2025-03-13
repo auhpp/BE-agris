@@ -3,29 +3,27 @@ package com.agri_supplies_shop.service.impl;
 import com.agri_supplies_shop.converter.ProductConverter;
 import com.agri_supplies_shop.dto.request.ProductRequest;
 import com.agri_supplies_shop.dto.request.SearchProductRequest;
-import com.agri_supplies_shop.dto.response.AttributeResponse;
-import com.agri_supplies_shop.dto.response.PageResponse;
-import com.agri_supplies_shop.dto.response.ProductResponse;
-import com.agri_supplies_shop.dto.response.ProductVariantValueResponse;
+import com.agri_supplies_shop.dto.response.*;
 import com.agri_supplies_shop.entity.Category;
 import com.agri_supplies_shop.entity.Product;
+import com.agri_supplies_shop.entity.ProductImage;
 import com.agri_supplies_shop.entity.Supplier;
 import com.agri_supplies_shop.enums.Origin;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.CategoryRepository;
+import com.agri_supplies_shop.repository.ImageRepository;
 import com.agri_supplies_shop.repository.ProductRepository;
 import com.agri_supplies_shop.repository.SupplierRepository;
-import com.agri_supplies_shop.service.AttributeService;
-import com.agri_supplies_shop.service.ProductService;
-import com.agri_supplies_shop.service.ProductVariantValueService;
-import com.agri_supplies_shop.service.VariantValueService;
+import com.agri_supplies_shop.service.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -46,6 +44,10 @@ public class ProductServiceImpl implements ProductService {
 
     AttributeService attributeService;
 
+    ImageService imageService;
+
+    ImageRepository imageRepository;
+
     @Override
     @Transactional
     public ProductResponse createAndUpdate(ProductRequest productRequest) {
@@ -55,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
             product = productRepository.findById(productRequest.getId()).orElseThrow(
                     () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
             );
-            productConverter.toExistsEntity(productRequest, product);
+            product = productConverter.toExistsEntity(productRequest, product);
         } else {
             //create
             product = productConverter.toEntity(productRequest);
@@ -122,12 +124,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public PageResponse<ProductResponse> find(SearchProductRequest searchProductRequest, int page, int size) {
-        List<Product> products = productRepository.findProduct(searchProductRequest, page, size);
+        List<Object> results = productRepository.findProduct(searchProductRequest, page, size);
+        Long totalElement = (Long) results.get(1);
+        List<Product> products = (List<Product>) results.get(0);
         return PageResponse.<ProductResponse>builder()
                 .currentPage(page)
                 .pageSize(size)
-                .totalElements(products.size())
-                .totalPage((products.size() / size) + 1)
+                .totalElements(totalElement)
+                .totalPage((int) (Math.ceil((double) totalElement / size)))
                 .data(
                         products.stream().map(
                                 it -> productConverter.toResponse(it)
@@ -141,6 +145,39 @@ public class ProductServiceImpl implements ProductService {
         return productConverter.toResponse(productRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
         ));
+    }
+
+    @Override
+    public List<ImageResponse> uploadImages(List<MultipartFile> files, Long id) {
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
+        );
+        List<ImageResponse> imageResponses = files.stream().map(
+                it -> {
+                    try {
+                        ImageResponse pathUrl = imageService.saveImage(it);
+                        ProductImage productImage = new ProductImage();
+                        productImage.setPath(pathUrl.getFilePath());
+                        productImage.setProduct(product);
+                        imageRepository.save(productImage);
+                        return ImageResponse.builder().filePath(pathUrl.getFilePath()).build();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        ).toList();
+        return imageResponses;
+    }
+
+    @Override
+    public ImageResponse uploadThumbnail(MultipartFile file, Long id) throws IOException {
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
+        );
+        ImageResponse pathUrl = imageService.saveImage(file);
+        product.setThumbnail(pathUrl.getFilePath());
+        productRepository.save(product);
+        return pathUrl;
     }
 
 

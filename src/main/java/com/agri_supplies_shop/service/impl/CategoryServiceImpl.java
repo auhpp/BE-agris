@@ -4,7 +4,6 @@ import com.agri_supplies_shop.converter.CategoryConverter;
 import com.agri_supplies_shop.dto.request.CategoryRequest;
 import com.agri_supplies_shop.dto.response.CategoryResponse;
 import com.agri_supplies_shop.entity.Category;
-import com.agri_supplies_shop.enums.Status;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.CategoryRepository;
@@ -16,10 +15,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,16 +30,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse createCategory(CategoryRequest categoryRequest) {
-        Category parent;
-        if (categoryRequest.getParentId() != null)
-            parent = categoryRepository.findById(categoryRequest.getParentId()).orElseThrow(
-                    () -> new AppException(ErrorCode.CATEGORY_NOT_FOUND)
-            );
-        else parent = null;
         Category category = Category
                 .builder()
                 .name(categoryRequest.getName())
-                .parent(parent)
                 .build();
         categoryRepository.save(category);
         return categoryConverter.toCategoryResponse(category);
@@ -53,27 +42,11 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryResponse> getAllCategories() {
         //Get all category
         List<Category> categories = categoryRepository.findAll();
-        //Create map category
-        Map<Long, CategoryResponse> categoryMap = categories.stream()
-                .collect(Collectors.toMap(
-                        category -> category.getId(),
-                        category -> categoryConverter.toCategoryResponse(category)
-                ));
-        //result list
-        List<CategoryResponse> rootCategories = new ArrayList<>();
-
-        for (Category category : categories) {
-            CategoryResponse response = categoryMap.get(category.getId());
-            if (category.getParent() != null) {
-                CategoryResponse parentResponse = categoryMap.get(category.getParent().getId());
-                if (parentResponse != null) {
-                    parentResponse.getChildCategory().add(response); // add child
-                }
-            } else {
-                rootCategories.add(response); //add parent
-            }
-        }
-        return rootCategories;
+        List<CategoryResponse> categoryResponses = categories.stream().map(
+                it ->
+                        categoryConverter.toCategoryResponse(it)
+        ).toList();
+        return categoryResponses;
     }
 
     @Override
