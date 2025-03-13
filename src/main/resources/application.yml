@@ -18,5 +18,7 @@ spring:
     enabled: false
 jwt:
   signer-key:
-  valid-duration: 3600 # in second
+  valid-duration: 36000 # in second
   refreshable-duration: 36000 # in second
+file:
+  upload-dir: D:\\university\\NLCS\\project\\images

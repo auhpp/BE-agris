@@ -31,10 +31,10 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Origin origin;
 
-    @Column(nullable = false)
+
     private LocalDate productionDate;
 
-    @Column(nullable = false)
+
     private LocalDate expiry;
 
     @Column(columnDefinition = "TEXT")

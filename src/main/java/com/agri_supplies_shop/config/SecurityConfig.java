@@ -15,10 +15,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final String[] PUBLIC_POST_ENDPOINTS = {
-            "/user", "/auth/token", "/product/search", "/auth/introspect", "/auth/logout", "/auth/refresh"
+            "/user", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
     };
     private final String[] PUBLIC_GET_ENDPOINTS = {
-            "/product/search/**", "/category"
+            "/product/search", "/category", "/image/**"
     };
     private final String[] PRIVATE_POST_ENDPOINTS = {
             "/product", "/category"

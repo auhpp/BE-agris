@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface AttributeService {
     AttributeResponse create(AttributeRequest request, Long productId);
-    void deleteById(List<Long> ids);
+    void deleteById(Long id);
 }

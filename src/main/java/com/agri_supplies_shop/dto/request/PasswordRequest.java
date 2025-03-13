@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class CategoryRequest {
-    private Long id;
-    private String name;
+@AllArgsConstructor
+public class PasswordRequest {
+    String oldPassword;
+    String newPassword;
 }
