@@ -19,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -37,18 +38,18 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartItemResponse addToCart(CartItemRequest request) {
-        CartItem cartItem;
-        if (request.getId() != null) {
-            cartItem = cartRepository.findById(request.getId()).orElseThrow(
-                    () -> new AppException(ErrorCode.CART_ITEM_NOT_FOUND)
-            );
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        Users user = userRepository.findByUserName(userName).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
+
+        CartItem cartItem = cartRepository.findByProductVariantValueIdAndUserId(
+                request.getProductVariantId(), user.getId()
+        );
+        if (cartItem != null) {
             cartConverter.toExistsEntity(request, cartItem);
         } else {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String userName = authentication.getName();
-            Users user = userRepository.findByUserName(userName).orElseThrow(
-                    () -> new AppException(ErrorCode.USER_NOT_EXISTED)
-            );
             cartItem = cartConverter.toEntity(request);
             cartItem.setUser(user);
         }
@@ -65,7 +66,8 @@ public class CartServiceImpl implements CartService {
         Users user = userRepository.findByUserName(userName).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page - 1, size,
+                Sort.by(Sort.Direction.DESC, "id"));
         Page<CartItem> pageData = cartRepository.findAllByUserId(user.getId(), pageable);
         return PageResponse.<CartItemResponse>builder()
                 .currentPage(page)

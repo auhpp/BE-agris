@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
@@ -42,25 +41,14 @@ public class ProductResource {
     }
 
     @GetMapping("/search")
-    public ApiResponse<PageResponse<ProductResponse>> find(@RequestParam Map<String, String> params,
+    public ApiResponse<PageResponse<ProductResponse>> find(SearchProductRequest params,
                                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                            @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
         ApiResponse<PageResponse<ProductResponse>> response = new ApiResponse<>();
         response.setCode(200);
-        SearchProductRequest searchProductRequest = SearchProductRequest.builder()
-                .build();
 
-        if (params.get("name") != null) {
-            searchProductRequest.setName(params.get("name"));
-        }
-        if (params.get("categoryName") != null) {
-            searchProductRequest.setCategoryName(params.get("categoryName"));
-        }
-        if (params.get("categoryId") != null) {
-            searchProductRequest.setCategoryId(Long.parseLong(params.get("categoryId")));
-        }
-        response.setResult(productService.find(searchProductRequest, page, size));
+        response.setResult(productService.find(params, page, size));
         return response;
     }
 

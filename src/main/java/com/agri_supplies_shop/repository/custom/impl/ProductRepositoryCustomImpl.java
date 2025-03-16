@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
@@ -32,7 +33,10 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             where.append(" AND c.name LIKE '%" + searchProductRequest.getCategoryName() + "%' ");
         }
         if (searchProductRequest.getCategoryId() != null) {
-            where.append(" AND p.category_id = " + searchProductRequest.getCategoryId());
+            String category = searchProductRequest.getCategoryId().stream()
+                    .map(it -> it.toString()).collect(Collectors.joining(", "));
+            where.append(" AND p.category_id IN (" + category + ")" +
+                    "");
         }
         if (searchProductRequest.getPriceFrom() != null) {
             where.append(" AND pvv.price >= " + searchProductRequest.getPriceFrom());

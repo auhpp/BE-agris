@@ -44,6 +44,7 @@ public class ProductConverter {
 
     public ProductResponse toResponse(Product product) {
         ProductResponse response = modelMapper.map(product, ProductResponse.class);
+        response.setOrigin(product.getOrigin().getName());
         //Category
         CategoryResponse categoryResponse = CategoryResponse
                 .builder()

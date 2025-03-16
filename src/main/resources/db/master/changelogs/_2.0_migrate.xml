@@ -13,16 +13,6 @@
             <column name="updated_at">NOW()</column>
         </insert>
     </changeSet>
-    <changeSet author="PhiAu (generated)" id="2">
-        <insert tableName="category">
-            <column name="id">2</column>
-            <column name="name">Phân bón lá</column>
-            <column name="status">ACTIVE</column>
-            <column name="parent_id">1</column>
-            <column name="created_at">NOW()</column>
-            <column name="updated_at">NOW()</column>
-        </insert>
-    </changeSet>
     <!--supplier-->
     <changeSet author="PhiAu (generated)" id="3">
         <insert tableName="supplier">
