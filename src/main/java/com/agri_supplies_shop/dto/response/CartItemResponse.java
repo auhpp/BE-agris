@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class CartItemResponse {
     private Long id;
     private Long quantity;
-    private Long productVariantId;
+    private ProductVariantValueResponse variant;
     private ProductResponse product;
 }

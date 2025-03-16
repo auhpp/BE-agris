@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,6 +16,8 @@ public class CartConverter {
     ModelMapper modelMapper;
 
     ProductConverter productConverter;
+
+    ProductVariantValueConverter variantConverter;
 
     public CartItem toEntity(CartItemRequest request) {
         return modelMapper.map(request, CartItem.class);
@@ -28,7 +29,7 @@ public class CartConverter {
 
     public CartItemResponse toResponse(CartItem cartItem) {
         CartItemResponse response = modelMapper.map(cartItem, CartItemResponse.class);
-        response.setProductVariantId(cartItem.getProductVariantValue().getId());
+        response.setVariant(variantConverter.toResponse(cartItem.getProductVariantValue()));
         response.setProduct(productConverter.toResponse(cartItem.getProductVariantValue().getProduct()));
         return response;
     }

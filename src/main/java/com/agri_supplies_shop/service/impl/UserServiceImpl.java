@@ -129,17 +129,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public AddressResponse createAndUpdateAddress(AddressRequest request) {
         Address address;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        Users user = userRepository.findByUserName(userName).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
         if (request.getId() == null) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String userName = authentication.getName();
-            Users user = userRepository.findByUserName(userName).orElseThrow(
-                    () -> new AppException(ErrorCode.USER_NOT_EXISTED)
-            );
             address = addressConverter.toEntity(request);
             address.setUser(user);
         } else {
             address = addressRepository.findById(request.getId()).get();
             addressConverter.toExistsEntity(address, request);
+        }
+        if (request.getDefaultChoice()) {
+            Address addr = addressRepository.findByDefaultChoiceAndUserId(true, user.getId());
+            if (addr != null) {
+                addr.setDefaultChoice(false);
+                addressRepository.save(addr);
+            }
         }
         return addressConverter.toResponse(addressRepository.save(address));
     }

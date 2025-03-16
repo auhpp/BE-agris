@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
+    Address findByDefaultChoiceAndUserId(boolean defaultChoice, Long id);
 }
