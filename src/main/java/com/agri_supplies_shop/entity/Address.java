@@ -21,8 +21,13 @@ public class Address {
     @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(nullable = false)
-    private String addressName;
+    private String province;
+
+    private String district;
+
+    private String ward;
+
+    private String deliveryAddress;
 
     @Column(nullable = false)
     private Boolean defaultChoice;

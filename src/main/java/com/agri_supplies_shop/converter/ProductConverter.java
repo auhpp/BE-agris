@@ -3,7 +3,6 @@ package com.agri_supplies_shop.converter;
 import com.agri_supplies_shop.dto.request.ProductRequest;
 import com.agri_supplies_shop.dto.response.*;
 import com.agri_supplies_shop.entity.Product;
-import com.agri_supplies_shop.enums.Origin;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,9 +32,6 @@ public class ProductConverter {
     public Product toExistsEntity(ProductRequest request, Product product) {
         product.setName(request.getName());
         product.setDescription(request.getDescription());
-        product.setOrigin(Origin.valueOf(request.getOrigin()));
-        product.setProductionDate(request.getProductionDate());
-        product.setExpiry(request.getExpiry());
         if (request.getThumbnail() != null) {
             product.setThumbnail(request.getThumbnail());
         }
@@ -44,7 +40,6 @@ public class ProductConverter {
 
     public ProductResponse toResponse(Product product) {
         ProductResponse response = modelMapper.map(product, ProductResponse.class);
-        response.setOrigin(product.getOrigin().getName());
         //Category
         CategoryResponse categoryResponse = CategoryResponse
                 .builder()
@@ -53,13 +48,6 @@ public class ProductConverter {
                 .build();
         response.setCategory(categoryResponse);
 
-        //Supplier
-        SupplierResponse supplierResponse = SupplierResponse
-                .builder()
-                .id(product.getSupplier().getId())
-                .name(product.getSupplier().getName())
-                .build();
-        response.setSupplier(supplierResponse);
         // product variant value
         if (product.getProductVariantValues() != null) {
             List<ProductVariantValueResponse> productVariantValueResponses =

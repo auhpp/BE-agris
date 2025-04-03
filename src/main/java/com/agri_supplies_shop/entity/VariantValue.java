@@ -3,6 +3,8 @@ package com.agri_supplies_shop.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -23,4 +25,5 @@ public class VariantValue {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Variant variant;
+
 }

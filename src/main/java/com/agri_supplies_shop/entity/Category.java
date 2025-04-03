@@ -1,5 +1,6 @@
 package com.agri_supplies_shop.entity;
 
+import com.agri_supplies_shop.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,9 @@ public class Category {
 
     @Column(nullable = false)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     //relationship
     //product

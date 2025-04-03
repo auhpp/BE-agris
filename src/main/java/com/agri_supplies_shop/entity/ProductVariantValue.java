@@ -1,9 +1,9 @@
 package com.agri_supplies_shop.entity;
 
+import com.agri_supplies_shop.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
@@ -18,23 +18,15 @@ public class ProductVariantValue {
     private Long id;
 
     @Column(nullable = false)
-    private Long stock;
+    private Long sellingPrice;
 
     @Column(nullable = false)
-    private String sku;
+    private Long capitalPrice;
 
-    private String thumbnail;
+    private Boolean isShipmentManage;
 
-    @Column(nullable = false)
-    private Long price;
-
-    private ZonedDateTime startDate;
-
-    private ZonedDateTime endDate;
-
-    private Long discount;
-
-    private String discountUnit;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     //Relationship
     //cart item
@@ -49,4 +41,13 @@ public class ProductVariantValue {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Product product;
+
+    //calculation unit
+    @ManyToOne
+    private CalculationUnit calculationUnit;
+
+    //Shipment
+    @OneToMany(mappedBy = "productVariantValue")
+    private List<Shipment> shipments;
+
 }

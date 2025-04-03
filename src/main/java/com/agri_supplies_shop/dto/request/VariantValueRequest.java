@@ -16,14 +16,7 @@ public class VariantValueRequest {
     private Long id;
     private List<String> variantCombination;
     private Long stock;
-    private Long price;
-    private String thumbnail;
+    private Long sellingPrice;
+    private Long capitalPrice;
 
-    private ZonedDateTime startDate;
-
-    private ZonedDateTime endDate;
-
-    private Long discount;
-
-    private String discountUnit;
 }

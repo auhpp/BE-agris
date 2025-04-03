@@ -7,8 +7,6 @@ import com.agri_supplies_shop.dto.response.*;
 import com.agri_supplies_shop.entity.Category;
 import com.agri_supplies_shop.entity.Product;
 import com.agri_supplies_shop.entity.ProductImage;
-import com.agri_supplies_shop.entity.Supplier;
-import com.agri_supplies_shop.enums.Origin;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.CategoryRepository;
@@ -62,18 +60,13 @@ public class ProductServiceImpl implements ProductService {
             //create
             product = productConverter.toEntity(productRequest);
         }
-        product.setOrigin(Origin.valueOf(productRequest.getOrigin()));
 
         //Get category entity
         Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow(
                 () -> new AppException(ErrorCode.CATEGORY_NOT_FOUND)
         );
         product.setCategory(category);
-        //Get supplier entity
-        Supplier supplier = supplierRepository.findById(productRequest.getSupplierId()).orElseThrow(
-                () -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND)
-        );
-        product.setSupplier(supplier);
+
         //Save product
         productRepository.save(product);
 

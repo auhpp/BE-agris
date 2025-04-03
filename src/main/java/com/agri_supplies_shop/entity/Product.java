@@ -1,10 +1,11 @@
 package com.agri_supplies_shop.entity;
 
-import com.agri_supplies_shop.enums.Origin;
+import com.agri_supplies_shop.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -16,6 +17,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,16 +29,6 @@ public class Product {
     @Column(nullable = false, columnDefinition = "text")
     private String description;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Origin origin;
-
-
-    private LocalDate productionDate;
-
-
-    private LocalDate expiry;
-
     @Column(columnDefinition = "TEXT")
     private String thumbnail;
 
@@ -46,12 +38,10 @@ public class Product {
     @LastModifiedDate
     private ZonedDateTime updatedAt;
 
-    //Relationship
-    //supplier
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private Supplier supplier;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
+    //Relationship
     //image
     @OneToMany(mappedBy = "product", cascade = {CascadeType.REMOVE})
     private List<ProductImage> productImages;
@@ -64,10 +54,6 @@ public class Product {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Category category;
-
-    //review
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.REMOVE})
-    private List<Review> reviews;
 
     //product variant value
     @OneToMany(mappedBy = "product")

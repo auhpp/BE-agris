@@ -20,7 +20,12 @@ public enum ErrorCode {
     WRONG_PASSWORD(1011, "Wrong password", HttpStatus.BAD_REQUEST),
     CART_ITEM_NOT_FOUND(1012, "Cart item not found", HttpStatus.BAD_REQUEST),
     DELETE_FAILED(1013, "The product is in one order", HttpStatus.BAD_REQUEST),
-    FILE_NOT_SUPPORTED(1014, "only .jpeg and .png images are supported", HttpStatus.BAD_REQUEST)
+    FILE_NOT_SUPPORTED(1014, "only .jpeg and .png images are supported", HttpStatus.BAD_REQUEST),
+    EMAIL_EXIT(1015, "Email existed", HttpStatus.BAD_REQUEST),
+    PHONE_NUMBER_EXIT(1016, "Phone number existed", HttpStatus.BAD_REQUEST),
+    WAREHOUSE_RECEIPT_NOT_EXISTED(1017, "Warehouse receipt not existed", HttpStatus.BAD_REQUEST),
+    WAREHOUSE_NOT_EXISTED(1018, "Warehouse not existed", HttpStatus.BAD_REQUEST),
+    CALCULATION_NOT_EXISTED(1019, "Calculation not existed", HttpStatus.BAD_REQUEST)
     ;
 
     private final int code;

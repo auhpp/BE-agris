@@ -25,8 +25,7 @@ public class Supplier {
     private String phoneNumber;
 
     //Relationship
-    //product
+    //warehouse receipt
     @OneToMany(mappedBy = "supplier")
-    private List<Product> products;
-
+    private List<WarehouseReceipt> warehouseReceipts;
 }
