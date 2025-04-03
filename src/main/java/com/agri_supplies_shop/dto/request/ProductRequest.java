@@ -19,8 +19,6 @@ public class ProductRequest {
 
     private String description;
 
-    private String origin;
-
     private LocalDate productionDate;
 
     private LocalDate expiry;
@@ -28,8 +26,6 @@ public class ProductRequest {
     private String thumbnail;
 
     private Long categoryId;
-
-    private Long supplierId;
 
     private List<AttributeRequest> attributes;
 

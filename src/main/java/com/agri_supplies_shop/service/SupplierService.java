@@ -7,6 +7,10 @@ import java.util.List;
 
 public interface SupplierService {
     SupplierResponse createSupplier(SupplierRequest request);
+
     List<SupplierResponse> getAll();
+
+    List<SupplierResponse> find(String name, String phoneNumber);
+
     void delete(List<Long> ids);
 }

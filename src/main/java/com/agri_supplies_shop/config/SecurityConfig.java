@@ -18,7 +18,7 @@ public class SecurityConfig {
             "/user", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
     };
     private final String[] PUBLIC_GET_ENDPOINTS = {
-            "/product/search", "/category", "/image/**"
+            "/product/search", "/category", "/image/**", "/product/get/**"
     };
     private final String[] PRIVATE_POST_ENDPOINTS = {
             "/product", "/category"

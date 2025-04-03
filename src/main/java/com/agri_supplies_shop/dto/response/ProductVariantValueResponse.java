@@ -13,11 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductVariantValueResponse {
     private Long id;
-    private int stock;
+    private Long stock;
     private String sku;
-    private Long price;
-    private Long oldPrice;
-    private String discount;
-    private String thumbnail;
+    private Long sellingPrice;
+    private Long capitalPrice;
     private List<VariantResponse> variantValues;
+    private String thumbnail;
+    private String name;
 }

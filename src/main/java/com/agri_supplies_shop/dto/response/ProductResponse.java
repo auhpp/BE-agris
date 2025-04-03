@@ -17,8 +17,6 @@ public class ProductResponse {
 
     private String description;
 
-    private String origin;
-
     private LocalDate productionDate;
 
     private LocalDate expiry;
@@ -27,7 +25,7 @@ public class ProductResponse {
 
     private CategoryResponse category;
 
-    private SupplierResponse supplier;
+//    private SupplierResponse supplier;
 
     private List<AttributeResponse> attributes;
 

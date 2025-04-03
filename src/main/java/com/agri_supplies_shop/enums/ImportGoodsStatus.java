@@ -1,10 +1,10 @@
 package com.agri_supplies_shop.enums;
 
-public enum Origin {
-    VIET_NAM("Việt Nam"), JAPAN("Nhật Bản"), GERMANY("Đức"), INDIA("Ấn Độ");
+public enum ImportGoodsStatus {
+    IMPORTED_GOODS("Đã nhập hàng"), WAITING_FOR_IMPORT("Chờ nhập hàng");
     private final String name;
 
-    Origin(String name) {
+    ImportGoodsStatus(String name) {
         this.name = name;
     }
 

@@ -15,6 +15,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -25,29 +27,32 @@ public class ProductVariantValueConverter {
 
     VariantValueRepository variantValueRepository;
 
-    public ProductVariantValue toEntity(VariantValueRequest request){
+    public ProductVariantValue toEntity(VariantValueRequest request) {
         return modelMapper.map(request, ProductVariantValue.class);
     }
-    public void toExistsEntity(VariantValueRequest request, ProductVariantValue variantValue){
+
+    public void toExistsEntity(VariantValueRequest request, ProductVariantValue variantValue) {
         modelMapper.map(request, variantValue);
     }
+
     public ProductVariantValueResponse toResponse(ProductVariantValue request) {
         ProductVariantValueResponse response = modelMapper.map(request, ProductVariantValueResponse.class);
-        Long priceNum = request.getPrice();
-        Long oldPrice = null;
-        String discount = null;
-        if (request.getDiscount() != null) {
-            oldPrice = priceNum;
-            if (request.getDiscountUnit().equals("%")) {
-                priceNum = (long) (priceNum - priceNum * (((float) request.getDiscount()) / 100));
-            } else if (request.getDiscountUnit().equals("đ")) {
-                priceNum = priceNum - request.getDiscount();
-            }
-            discount = request.getDiscount() + request.getDiscountUnit();
-        }
-        response.setPrice(priceNum);
-        response.setOldPrice(oldPrice);
-        response.setDiscount(discount);
+//        Long priceNum = request.getSellingPrice();
+//        Long oldPrice = null;
+//        String discount = null;
+//        if (request.getDiscount() != null) {
+//            oldPrice = priceNum;
+//            if (request.getDiscountUnit().equals("%")) {
+//                priceNum = (long) (priceNum - priceNum * (((float) request.getDiscount()) / 100));
+//            } else if (request.getDiscountUnit().equals("đ")) {
+//                priceNum = priceNum - request.getDiscount();
+//            }
+//            discount = request.getDiscount() + request.getDiscountUnit();
+//        }
+        response.setSellingPrice(request.getSellingPrice());
+        response.setCapitalPrice(request.getCapitalPrice());
+//        response.setOldPrice(oldPrice);
+//        response.setDiscount(discount);
 
         //Sku
         List<Long> variantIds = Arrays.stream(request.getSku().split("[-]")).map(
@@ -70,6 +75,10 @@ public class ProductVariantValueConverter {
                         .build()
         ).toList();
         response.setVariantValues(variantResponses);
+        //Stock
+
+        response.setName(request.getProduct().getName());
+        response.setThumbnail(request.getProduct().getThumbnail());
         return response;
     }
 }

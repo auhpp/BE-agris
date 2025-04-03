@@ -36,6 +36,16 @@ public class SupplierResource {
                 .build();
     }
 
+    @GetMapping("/search")
+    public ApiResponse<List<SupplierResponse>> find(@RequestParam(name = "name") String name,
+                                                    @RequestParam(name = "phoneNumber") String phoneNumber
+    ) {
+        return ApiResponse.<List<SupplierResponse>>builder()
+                .code(200)
+                .result(supplierService.find(name, phoneNumber))
+                .build();
+    }
+
     @DeleteMapping("/{ids}")
     public void getAll(@PathVariable("ids") List<Long> ids) {
         supplierService.delete(ids);
