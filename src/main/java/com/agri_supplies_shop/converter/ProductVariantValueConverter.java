@@ -4,7 +4,9 @@ import com.agri_supplies_shop.dto.request.VariantValueRequest;
 import com.agri_supplies_shop.dto.response.ProductVariantValueResponse;
 import com.agri_supplies_shop.dto.response.VariantResponse;
 import com.agri_supplies_shop.entity.ProductVariantValue;
+import com.agri_supplies_shop.entity.Shipment;
 import com.agri_supplies_shop.entity.VariantValue;
+import com.agri_supplies_shop.entity.WarehouseDetail;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.VariantValueRepository;
@@ -14,10 +16,12 @@ import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -76,9 +80,33 @@ public class ProductVariantValueConverter {
         ).toList();
         response.setVariantValues(variantResponses);
         //Stock
-
-        response.setName(request.getProduct().getName());
+        if (request.getShipments() != null) {
+            List<Shipment> shipmentsHasExpiry = request.getShipments().stream().filter(
+                    sm ->
+                            Optional.ofNullable(sm).map(Shipment::getExpiry).filter(
+                                    expiry -> expiry.isAfter(LocalDate.now())
+                            ).isPresent()
+            ).toList();
+            List<Shipment> shipmentsNoExpiry = request.getShipments().stream().filter(
+                    sm ->
+                            sm.getExpiry() == null
+            ).toList();
+            List<Shipment> shipments = Stream.of(shipmentsNoExpiry, shipmentsHasExpiry)
+                    .flatMap(Collection::stream).toList();
+            List<WarehouseDetail> warehouseDetails = shipments.stream().flatMap(
+                    it -> it.getWarehouseDetails().stream()
+            ).toList();
+            Long stock = warehouseDetails.stream().reduce(
+                    0L, (result, wd) -> result + wd.getStock(), Long::sum
+            );
+            response.setStock(stock);
+        } else {
+            response.setStock(0L);
+        }
+        //Thumbnail
         response.setThumbnail(request.getProduct().getThumbnail());
+        //name
+        response.setName(request.getProduct().getName());
         return response;
     }
 }

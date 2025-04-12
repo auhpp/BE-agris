@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItem {
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -18,10 +18,10 @@ public class CartItem {
     private Long quantity;
 
     //Relationship
-    //user
+    //Customer
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Users user;
+    private Customer customer;
 
     //product variant value
     @ManyToOne

@@ -18,6 +18,7 @@ public class ProductVariantValueResponse {
     private Long sellingPrice;
     private Long capitalPrice;
     private List<VariantResponse> variantValues;
-    private String thumbnail;
     private String name;
+    private CalculationUnitResponse calculationUnit;
+    private String thumbnail;
 }

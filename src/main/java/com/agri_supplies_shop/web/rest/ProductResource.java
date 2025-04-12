@@ -2,13 +2,11 @@ package com.agri_supplies_shop.web.rest;
 
 import com.agri_supplies_shop.dto.request.ProductRequest;
 import com.agri_supplies_shop.dto.request.SearchProductRequest;
-import com.agri_supplies_shop.dto.response.ApiResponse;
-import com.agri_supplies_shop.dto.response.ImageResponse;
-import com.agri_supplies_shop.dto.response.PageResponse;
-import com.agri_supplies_shop.dto.response.ProductResponse;
+import com.agri_supplies_shop.dto.response.*;
 import com.agri_supplies_shop.service.AttributeService;
 import com.agri_supplies_shop.service.ProductService;
 import com.agri_supplies_shop.service.ProductVariantValueService;
+import com.agri_supplies_shop.service.VariantValueService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,6 +26,8 @@ public class ProductResource {
     ProductVariantValueService productVariantValueService;
 
     AttributeService attributeService;
+
+    VariantValueService variantValueService;
 
     @PostMapping
     public ApiResponse<ProductResponse> createAndUpdate(
@@ -105,5 +105,20 @@ public class ProductResource {
         response.setCode(200);
         response.setResult(productService.uploadImages(files, productId));
         return response;
+    }
+
+    @GetMapping("/variant")
+    public ApiResponse getAll() {
+        return ApiResponse.<List<VariantResponse>>builder()
+                .code(200)
+                .result(variantValueService.getAllVariant())
+                .build();
+    }
+
+    @GetMapping("/variant/{name}")
+    public ApiResponse getVariantValue(@PathVariable("name") String name) {
+        return ApiResponse.<List<VariantResponse>>builder()
+                .result(variantValueService.getVariantValue(name))
+                .build();
     }
 }

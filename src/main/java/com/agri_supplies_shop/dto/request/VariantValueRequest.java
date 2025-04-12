@@ -18,5 +18,6 @@ public class VariantValueRequest {
     private Long stock;
     private Long sellingPrice;
     private Long capitalPrice;
+    private Long calculationUnitId;
 
 }

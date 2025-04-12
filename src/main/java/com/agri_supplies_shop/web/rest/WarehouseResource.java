@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/warehouse")
 @RequiredArgsConstructor
@@ -31,8 +33,8 @@ public class WarehouseResource {
                 .build();
     }
 
-    @GetMapping
-    public ApiResponse getAll(
+    @GetMapping("/search")
+    public ApiResponse search(
             @RequestParam(name = "name") String name,
             @RequestParam(name = "page", required = false, defaultValue = "1") int page,
             @RequestParam(name = "size", required = false, defaultValue = "10") int size
@@ -69,4 +71,19 @@ public class WarehouseResource {
                 .build();
     }
 
+    @GetMapping
+    public ApiResponse getAllWarehouse() {
+        return ApiResponse.<List<WarehouseResponse>>builder()
+                .code(200)
+                .result(warehouseService.getAll())
+                .build();
+    }
+
+    @PostMapping("/receipt/import/{id}")
+    public ApiResponse importWarehouse(@PathVariable("id") Long warehouseReceiptId) {
+        return ApiResponse.builder()
+                .code(200)
+                .result(warehouseService.importWarehouse(warehouseReceiptId))
+                .build();
+    }
 }

@@ -83,7 +83,16 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    @Transactional
     public void deleteImg(Long id) {
         imageRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteImgLocal(String name) throws IOException {
+        Path uploadPath = Paths.get(uploadDir);
+        Path filePath = uploadPath.resolve(name);
+        Files.delete(filePath);
     }
 }

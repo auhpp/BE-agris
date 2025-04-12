@@ -5,14 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReceiptDetailResponse {
+    private Long id;
     private ProductVariantValueResponse productVariant;
     private Long unitPrice;
-
-    private Long quantity;
+    private List<ShipmentResponse> shipments;
 
 }

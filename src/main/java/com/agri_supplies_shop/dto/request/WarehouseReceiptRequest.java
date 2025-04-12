@@ -15,6 +15,10 @@ public class WarehouseReceiptRequest {
 
     private Long supplierId;
 
+    private Long warehouseId;
+
+    private Long staffId;
+
     private Long amount;
 
     private String note;

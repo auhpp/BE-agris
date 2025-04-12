@@ -17,7 +17,13 @@ public class AddressResponse {
 
     private String phoneNumber;
 
-    private String addressName;
+    private String province;
+
+    private String ward;
+
+    private String district;
+
+    private String deliveryAddress;
 
     private Boolean defaultChoice;
 }

@@ -33,8 +33,10 @@ public class Address {
     private Boolean defaultChoice;
 
     //Relationship
-    //user
+    //customer
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Users user;
+    private Customer customer;
+
+
 }

@@ -22,6 +22,8 @@ public class WarehouseReceipt {
 
     private ZonedDateTime createdDate;
 
+    private ZonedDateTime importDate;
+
     private Long amount;
 
     private String note;
@@ -48,4 +50,8 @@ public class WarehouseReceipt {
     //warehouse
     @ManyToOne
     private Warehouse warehouse;
+
+    //Staff
+    @ManyToOne
+    private Staff staff;
 }

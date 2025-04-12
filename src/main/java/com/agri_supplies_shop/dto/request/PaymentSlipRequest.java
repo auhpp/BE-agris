@@ -16,10 +16,6 @@ public class PaymentSlipRequest {
 
     private Long outstandingDebt;
 
-    private String type;
-
-    private Long typeCode;
-
     private ZonedDateTime createdDate;
 
     private String paymentMethod;

@@ -1,5 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <changeSet author="auhpp (generated)" id="1743257809535-40">
         <dropForeignKeyConstraint baseTableName="product" constraintName="FK2kxvbr72tmtscjvyp9yqb12by"/>
     </changeSet>
@@ -201,37 +203,70 @@
         </addColumn>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-29">
-        <addForeignKeyConstraint baseColumnNames="warehouse_receipt_id" baseTableName="receipt_detail" constraintName="FK60p20s69kc1khrxi5pbb32r2r" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="warehouse_receipt" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="warehouse_receipt_id" baseTableName="receipt_detail"
+                                 constraintName="FK60p20s69kc1khrxi5pbb32r2r" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="warehouse_receipt" validate="true"/>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-30">
-        <addForeignKeyConstraint baseColumnNames="receipt_detail_id" baseTableName="shipment_detail" constraintName="FK7a11atc6t6hkw98hlmtdckdgo" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="receipt_detail" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="receipt_detail_id" baseTableName="shipment_detail"
+                                 constraintName="FK7a11atc6t6hkw98hlmtdckdgo" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="receipt_detail" validate="true"/>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-31">
-        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="warehouse_receipt" constraintName="FK8atsqbe5gnjjeriud0qn6j4xe" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="supplier" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="supplier_id" baseTableName="warehouse_receipt"
+                                 constraintName="FK8atsqbe5gnjjeriud0qn6j4xe" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="supplier"
+                                 validate="true"/>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-32">
-        <addForeignKeyConstraint baseColumnNames="calculation_unit_id" baseTableName="product_variant_value" constraintName="FKcnovxc0svo3rkwucl15xx6l9g" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="calculation_unit" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="calculation_unit_id" baseTableName="product_variant_value"
+                                 constraintName="FKcnovxc0svo3rkwucl15xx6l9g" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="calculation_unit" validate="true"/>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-33">
-        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="warehouse_receipt" constraintName="FKeb5ujxu69caxcqhnkqj0b79e7" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="warehouse" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="warehouse_receipt"
+                                 constraintName="FKeb5ujxu69caxcqhnkqj0b79e7" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="warehouse"
+                                 validate="true"/>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-34">
-        <addForeignKeyConstraint baseColumnNames="shipment_id" baseTableName="shipment_detail" constraintName="FKkqt5epu0hn4c20bxiw8go6yre" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="shipment" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="shipment_id" baseTableName="shipment_detail"
+                                 constraintName="FKkqt5epu0hn4c20bxiw8go6yre" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="shipment"
+                                 validate="true"/>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-35">
-        <addForeignKeyConstraint baseColumnNames="product_variant_value_id" baseTableName="receipt_detail" constraintName="FKobtnvonuqgllsotjx8yo5ixg0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="product_variant_value" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="product_variant_value_id" baseTableName="receipt_detail"
+                                 constraintName="FKobtnvonuqgllsotjx8yo5ixg0" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="product_variant_value" validate="true"/>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-36">
-        <addForeignKeyConstraint baseColumnNames="warehouse_receipt_id" baseTableName="payment_slip" constraintName="FKottel7kuqw9savd5bggmqpk0r" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="warehouse_receipt" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="warehouse_receipt_id" baseTableName="payment_slip"
+                                 constraintName="FKottel7kuqw9savd5bggmqpk0r" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="warehouse_receipt" validate="true"/>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-37">
-        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="warehouse_detail" constraintName="FKq38r4w8y88x9t88icpttecqaa" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="warehouse" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="warehouse_detail"
+                                 constraintName="FKq38r4w8y88x9t88icpttecqaa" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="warehouse"
+                                 validate="true"/>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-38">
-        <addForeignKeyConstraint baseColumnNames="shipment_id" baseTableName="warehouse_detail" constraintName="FKs495p87xkcygms6bf2kql6vcf" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="shipment" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="shipment_id" baseTableName="warehouse_detail"
+                                 constraintName="FKs495p87xkcygms6bf2kql6vcf" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="shipment"
+                                 validate="true"/>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-39">
-        <addForeignKeyConstraint baseColumnNames="product_variant_value_id" baseTableName="warehouse_detail" constraintName="FKtcwbs3ijyq0dcyryd8ikq59io" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="product_variant_value" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="product_variant_value_id" baseTableName="warehouse_detail"
+                                 constraintName="FKtcwbs3ijyq0dcyryd8ikq59io" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="product_variant_value" validate="true"/>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743257809535-43">
         <dropTable tableName="review"/>
@@ -296,6 +331,9 @@
         </addColumn>
     </changeSet>
     <changeSet author="auhpp (generated)" id="1743564262538-2">
-        <addForeignKeyConstraint baseColumnNames="product_variant_value_id" baseTableName="shipment" constraintName="FKmmvjsoshtw4iep677ijs77ing" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="product_variant_value" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="product_variant_value_id" baseTableName="shipment"
+                                 constraintName="FKmmvjsoshtw4iep677ijs77ing" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="product_variant_value" validate="true"/>
     </changeSet>
 </databaseChangeLog>

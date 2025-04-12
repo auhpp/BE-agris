@@ -15,7 +15,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final String[] PUBLIC_POST_ENDPOINTS = {
-            "/user", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
+            "/customer", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh",
+             "/staff/account"
     };
     private final String[] PUBLIC_GET_ENDPOINTS = {
             "/product/search", "/category", "/image/**", "/product/get/**"
@@ -24,10 +25,10 @@ public class SecurityConfig {
             "/product", "/category"
     };
     private final String[] PRIVATE_GET_ENDPOINTS = {
-            "/supplier", "/user", "/role"
+            "/supplier", "/customer", "/role"
     };
     private final String[] PRIVATE_DELETE_ENDPOINTS = {
-            "/product/**", "/user", "/category", "/supplier"
+            "/product/**", "/customer", "/category", "/supplier"
     };
     @Autowired
     private CustomJwtDecoder jwtDecoder;

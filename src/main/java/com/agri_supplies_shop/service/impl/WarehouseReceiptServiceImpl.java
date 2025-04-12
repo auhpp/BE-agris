@@ -7,14 +7,16 @@ import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.ReceiptDetailResponse;
 import com.agri_supplies_shop.dto.response.WarehouseReceiptResponse;
 import com.agri_supplies_shop.entity.WarehouseReceipt;
+import com.agri_supplies_shop.enums.ImportGoodsStatus;
 import com.agri_supplies_shop.enums.PaymentStatus;
-import com.agri_supplies_shop.enums.TypeStock;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
+import com.agri_supplies_shop.repository.StaffRepository;
 import com.agri_supplies_shop.repository.SupplierRepository;
 import com.agri_supplies_shop.repository.WarehouseReceiptRepository;
-import com.agri_supplies_shop.service.ReceiptDetailService;
+import com.agri_supplies_shop.repository.WarehouseRepository;
 import com.agri_supplies_shop.service.PaymentSlipService;
+import com.agri_supplies_shop.service.ReceiptDetailService;
 import com.agri_supplies_shop.service.WarehouseReceiptService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -43,10 +45,14 @@ public class WarehouseReceiptServiceImpl implements WarehouseReceiptService {
 
     WarehouseReceiptConverter warehouseReceiptConverter;
 
+    WarehouseRepository warehouseRepository;
+
+    StaffRepository staffRepository;
 
     @Override
     @Transactional
     public WarehouseReceiptResponse create(WarehouseReceiptRequest request) {
+        //Warehouse
         WarehouseReceipt warehouseReceipt = WarehouseReceipt.builder()
                 .createdDate(ZonedDateTime.now())
                 .amount(request.getAmount())
@@ -54,20 +60,29 @@ public class WarehouseReceiptServiceImpl implements WarehouseReceiptService {
                 .supplier(supplierRepository.findById(request.getSupplierId()).orElseThrow(
                         () -> new AppException(ErrorCode.SUPPLIER_NOT_FOUND)
                 ))
+                .warehouse(warehouseRepository.findById(request.getWarehouseId()).orElseThrow(
+                        () -> new AppException(ErrorCode.WAREHOUSE_NOT_EXISTED)
+                ))
+                .importStatus(ImportGoodsStatus.WAITING_FOR_IMPORT)
+                .staff(staffRepository.findById(request.getStaffId()).orElseThrow(
+                        () -> new AppException(ErrorCode.STAFF_NOT_EXISTED)
+                ))
                 .build();
 
         warehouseReceiptRepository.save(warehouseReceipt);
+        //receipt detail
         List<ReceiptDetailResponse> receiptDetails = request.getReceiptDetails().stream().map(
                 it -> receiptDetailService.create(it, warehouseReceipt.getId())
         ).toList();
+
+
+        //Payment slip
         if (request.getAmount() != request.getMoneyForSupplier()) {
             PaymentSlipRequest supplierDebtRequest = PaymentSlipRequest.builder()
-                    .type(TypeStock.RECEIPT.getName())
                     .warehouseReceiptId(warehouseReceipt.getId())
                     .paid(request.getMoneyForSupplier())
                     .outstandingDebt(request.getAmount() - request.getMoneyForSupplier())
                     .createdDate(ZonedDateTime.now())
-                    .typeCode(0L)
                     .paymentMethod(request.getPaymentMethod())
                     .note("")
                     .build();
@@ -78,7 +93,6 @@ public class WarehouseReceiptServiceImpl implements WarehouseReceiptService {
             warehouseReceipt.setPaymentStatus(PaymentStatus.PAID);
             warehouseReceiptRepository.save(warehouseReceipt);
         }
-
 
         WarehouseReceiptResponse response = warehouseReceiptConverter.toResponse(warehouseReceipt);
         response.setReceiptDetails(receiptDetails);

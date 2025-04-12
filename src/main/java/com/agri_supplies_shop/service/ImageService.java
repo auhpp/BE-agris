@@ -5,11 +5,14 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface ImageService {
     ImageResponse saveImage(MultipartFile file
-                                  ) throws IOException;
+    ) throws IOException;
+
     UrlResource getImage(String fileName);
+
     void deleteImg(Long id);
+
+    void deleteImgLocal(String name) throws IOException;
 }

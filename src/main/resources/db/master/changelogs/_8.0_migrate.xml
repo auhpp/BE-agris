@@ -1,0 +1,384 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="1743690358080-1" author="auhpp">
+        <insert tableName="variant">
+            <column name="id">1</column>
+            <column name="name">DEFAULT</column>
+        </insert>
+    </changeSet>
+    <changeSet id="1743690387167-1" author="auhpp">
+        <insert tableName="variant_value">
+            <column name="value">DEFAULT</column>
+            <column name="variant_id">1</column>
+        </insert>
+    </changeSet>
+    <changeSet id="1743729257157-1" author="auhpp">
+        <insert tableName="variant_value">
+            <column name="value">100ml</column>
+            <column name="variant_id">2</column>
+        </insert>
+    </changeSet>
+    <changeSet id="1743757169089-1" author="auhpp">
+        <dropNotNullConstraint tableName="product_variant_value" columnName="capital_price"/>
+    </changeSet>
+    <changeSet id="1743757173713-1" author="auhpp">
+        <dropNotNullConstraint tableName="product_variant_value" columnName="selling_price"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-20">
+        <dropForeignKeyConstraint baseTableName="order_detail" constraintName="FK4nn3of2hwgih3qdvfn8oethmu"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-21">
+        <dropForeignKeyConstraint baseTableName="users" constraintName="FK4qu1gr772nnf6ve5af002rwya"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-22">
+        <dropForeignKeyConstraint baseTableName="address" constraintName="FK6i66ijb8twgcqtetl8eeeed6v"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-23">
+        <dropForeignKeyConstraint baseTableName="cart_item" constraintName="FKka3t831w0aw2vrwgsbhcn5y4m"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-1">
+        <createSequence incrementBy="50" sequenceName="account_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-2">
+        <createSequence incrementBy="50" sequenceName="customer_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-3">
+        <createSequence incrementBy="50" sequenceName="staff_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-4">
+        <createTable tableName="account">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="accountPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITH TIME ZONE"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="user_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-5">
+        <createTable tableName="customer">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="customerPK"/>
+            </column>
+            <column name="avatar" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMP(6) WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_of_birth" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="full_name" type="VARCHAR(255)"/>
+            <column name="gender" type="VARCHAR(255)"/>
+            <column name="phone_number" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="account_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-6">
+        <createTable tableName="staff">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="staffPK"/>
+            </column>
+            <column name="avatar" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMP(6) WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_of_birth" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="full_name" type="VARCHAR(255)"/>
+            <column name="gender" type="VARCHAR(255)"/>
+            <column name="phone_number" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="account_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-7">
+        <addColumn tableName="address">
+            <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-8">
+        <addColumn tableName="cart_item">
+            <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-9">
+        <addColumn tableName="order_detail">
+            <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-10">
+        <addColumn tableName="warehouse_receipt">
+            <column name="staff_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-11">
+        <addUniqueConstraint columnNames="account_id" constraintName="UC_CUSTOMERACCOUNT_ID_COL" tableName="customer"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-12">
+        <addUniqueConstraint columnNames="account_id" constraintName="UC_STAFFACCOUNT_ID_COL" tableName="staff"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-13">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="address" constraintName="FK93c3js0e22ll1xlu21nvrhqgg" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="customer" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-14">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="account" constraintName="FKd4vb66o896tay3yy52oqxr9w0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="role" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-15">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="cart_item" constraintName="FKfy7fubprxqguyp4km04eogy66" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="customer" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-16">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="order_detail" constraintName="FKkefm6js2d9us8ulug8jsy1jnd" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="customer" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-17">
+        <addForeignKeyConstraint baseColumnNames="staff_id" baseTableName="warehouse_receipt" constraintName="FKlo201xpsp7ondqg7e43j2stmr" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="staff" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-18">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="customer" constraintName="FKn9x2k8svpxj3r328iy1rpur83" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="account" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-19">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="staff" constraintName="FKs9jl798sgmtrl79dm4svocvaw" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="account" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-24">
+        <dropTable tableName="users"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-25">
+        <dropColumn columnName="user_id" tableName="address"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-26">
+        <dropColumn columnName="user_id" tableName="cart_item"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-27">
+        <dropColumn columnName="user_id" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1743930587169-28">
+        <dropSequence sequenceName="users_seq"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744035867685-1">
+        <addColumn tableName="warehouse_receipt">
+            <column name="import_date" type="TIMESTAMP(6) WITH TIME ZONE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422397334-7">
+        <dropForeignKeyConstraint baseTableName="order_item" constraintName="FKi6egxj7tt07vq7a8sf3atgqyq"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422397334-1">
+        <addColumn tableName="order_detail">
+            <column name="address" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422397334-2">
+        <addColumn tableName="order_detail">
+            <column name="full_name" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422397334-3">
+        <addColumn tableName="order_detail">
+            <column name="payment_method" type="SMALLINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422397334-4">
+        <addColumn tableName="order_detail">
+            <column name="phone_number" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422397334-5">
+        <addColumn tableName="order_item">
+            <column name="shipment_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422397334-6">
+        <addForeignKeyConstraint baseColumnNames="shipment_id" baseTableName="order_item" constraintName="FK9n89x28f2c2wveyeli0dnkxnx" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="shipment" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422397334-8">
+        <dropColumn columnName="product_variant_value_id" tableName="order_item"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-14">
+        <dropForeignKeyConstraint baseTableName="order_item" constraintName="FK9n89x28f2c2wveyeli0dnkxnx"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-15">
+        <dropForeignKeyConstraint baseTableName="order_item" constraintName="FKetp2gbd2bsv1qqq4bp1b4p4ds"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-16">
+        <dropForeignKeyConstraint baseTableName="cart_item" constraintName="FKfy7fubprxqguyp4km04eogy66"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-17">
+        <dropForeignKeyConstraint baseTableName="order_detail" constraintName="FKkefm6js2d9us8ulug8jsy1jnd"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-18">
+        <dropForeignKeyConstraint baseTableName="cart_item" constraintName="FKn4c28wnwj7a93r25qywq8n9ny"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-1">
+        <createSequence incrementBy="50" sequenceName="cart_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-2">
+        <createSequence incrementBy="50" sequenceName="order_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-3">
+        <createTable tableName="cart">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cartPK"/>
+            </column>
+            <column name="quantity" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_variant_value_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-4">
+        <createTable tableName="order">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="orderPK"/>
+            </column>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="amount" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP(6) WITH TIME ZONE"/>
+            <column name="full_name" type="VARCHAR(255)"/>
+            <column name="note" type="VARCHAR(255)"/>
+            <column name="order_status" type="VARCHAR(255)"/>
+            <column name="payment_method" type="SMALLINT"/>
+            <column name="payment_provider" type="VARCHAR(255)"/>
+            <column name="payment_status" type="VARCHAR(255)"/>
+            <column name="phone_number" type="VARCHAR(255)"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITH TIME ZONE"/>
+            <column name="customer_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-5">
+        <addColumn tableName="order_detail">
+            <column name="order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-6">
+        <addColumn tableName="order_detail">
+            <column name="price" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-7">
+        <addColumn tableName="order_detail">
+            <column name="quantity" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-8">
+        <addColumn tableName="order_detail">
+            <column name="shipment_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-9">
+        <addForeignKeyConstraint baseColumnNames="shipment_id" baseTableName="order_detail" constraintName="FK7u7dm4fdc78nttlrbv6silfq8" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="shipment" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-10">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="order" constraintName="FKb8tboo4d95mh8gavvovwbb7vg" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="customer" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-11">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="cart" constraintName="FKdebwvad6pp1ekiqy5jtixqbaj" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="customer" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-12">
+        <addForeignKeyConstraint baseColumnNames="product_variant_value_id" baseTableName="cart" constraintName="FKm38w5fqrcmwjtlmm6rew6fcbn" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="product_variant_value" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-13">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="order_detail" constraintName="FKplam7wxc4tjbgex0xyk8f0qxo" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="order" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-19">
+        <dropTable tableName="cart_item"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-20">
+        <dropTable tableName="order_item"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-21">
+        <dropColumn columnName="address" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-22">
+        <dropColumn columnName="amount" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-23">
+        <dropColumn columnName="created_at" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-24">
+        <dropColumn columnName="customer_id" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-25">
+        <dropColumn columnName="full_name" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-26">
+        <dropColumn columnName="note" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-27">
+        <dropColumn columnName="order_status" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-28">
+        <dropColumn columnName="payment_method" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-29">
+        <dropColumn columnName="payment_provider" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-30">
+        <dropColumn columnName="payment_status" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-31">
+        <dropColumn columnName="phone_number" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-32">
+        <dropColumn columnName="updated_at" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-33">
+        <dropSequence sequenceName="cart_item_seq"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744422646903-34">
+        <dropSequence sequenceName="order_item_seq"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744424152848-1">
+        <addColumn tableName="order">
+            <column name="delivery_address" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744424152848-2">
+        <addColumn tableName="order">
+            <column name="district" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744424152848-3">
+        <addColumn tableName="order">
+            <column name="province" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744424152848-4">
+        <addColumn tableName="order_detail">
+            <column name="unit_price" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744424152848-5">
+        <addColumn tableName="order">
+            <column name="ward" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744424152848-6">
+        <dropColumn columnName="address" tableName="order"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744424152848-7">
+        <dropColumn columnName="price" tableName="order_detail"/>
+    </changeSet>
+</databaseChangeLog>
