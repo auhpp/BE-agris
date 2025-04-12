@@ -4,12 +4,13 @@ package com.agri_supplies_shop.service.impl;
 import com.agri_supplies_shop.converter.ProductVariantValueConverter;
 import com.agri_supplies_shop.dto.request.VariantValueRequest;
 import com.agri_supplies_shop.dto.response.ProductVariantValueResponse;
+import com.agri_supplies_shop.entity.CalculationUnit;
 import com.agri_supplies_shop.entity.Product;
 import com.agri_supplies_shop.entity.ProductVariantValue;
 import com.agri_supplies_shop.entity.VariantValue;
-import com.agri_supplies_shop.enums.TypeStock;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
+import com.agri_supplies_shop.repository.CalculationUnitRepository;
 import com.agri_supplies_shop.repository.ProductRepository;
 import com.agri_supplies_shop.repository.ProductVariantValueRepository;
 import com.agri_supplies_shop.repository.VariantValueRepository;
@@ -21,7 +22,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +40,7 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
 
     ImageService imageService;
 
+    CalculationUnitRepository calculationUnitRepository;
 
     @Override
     @Transactional
@@ -50,6 +54,12 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
         } else {
             productVariantValue = variantValueConverter.toEntity(request);
         }
+        //Calculation unit
+        CalculationUnit calculationUnit = calculationUnitRepository.findById(request.getCalculationUnitId()).
+                orElseThrow(
+                        () -> new AppException(ErrorCode.CALCULATION_NOT_EXISTED)
+                );
+        productVariantValue.setCalculationUnit(calculationUnit);
         //Create sku
         List<String> variantIds = request.getVariantCombination().stream().map(
                 it -> {
@@ -76,7 +86,10 @@ public class ProductVariantValueImpl implements ProductVariantValueService {
                     ProductVariantValue productVariant = productVariantValueRepository.findById(it).orElseThrow(
                             () -> new AppException(ErrorCode.PRODUCT_VARIANT_VALUE_NOT_FOUND)
                     );
-                    if (productVariant.getOrderItems().isEmpty()) {
+                    if (productVariant.getShipments().isEmpty()
+                            && productVariant.getCarts().isEmpty() &&
+                            productVariant.getProduct().getProductVariantValues().size() > 1
+                    ) {
                         productVariantValueRepository.deleteById(it);
                     } else {
                         throw new AppException(ErrorCode.DELETE_FAILED);

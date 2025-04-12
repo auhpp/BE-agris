@@ -6,12 +6,13 @@ import com.agri_supplies_shop.dto.request.LogoutRequest;
 import com.agri_supplies_shop.dto.request.RefreshRequest;
 import com.agri_supplies_shop.dto.response.AuthenticationResponse;
 import com.agri_supplies_shop.dto.response.IntrospectResponse;
+import com.agri_supplies_shop.entity.Account;
 import com.agri_supplies_shop.entity.InvalidatedToken;
-import com.agri_supplies_shop.entity.Users;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
+import com.agri_supplies_shop.repository.AccountRepository;
+import com.agri_supplies_shop.repository.CustomerRepository;
 import com.agri_supplies_shop.repository.InvalidatedTokenRepository;
-import com.agri_supplies_shop.repository.UserRepository;
 import com.agri_supplies_shop.service.AuthenticationService;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -36,11 +37,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationServiceImpl implements AuthenticationService {
-    UserRepository userRepository;
-
     InvalidatedTokenRepository invalidatedTokenRepository;
 
     PasswordEncoder passwordEncoder;
+
+    AccountRepository accountRepository;
 
     @NonFinal
     @Value("${jwt.signer-key}")
@@ -56,16 +57,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws JOSEException {
-        Users user = userRepository.findByUserName(request.getUserName()).orElseThrow(
+        Account account = accountRepository.findByUserName(request.getUserName()).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
         AuthenticationResponse response = new AuthenticationResponse();
-        boolean valid = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        boolean valid = passwordEncoder.matches(request.getPassword(), account.getPassword());
         if (valid) {
-            String token = generateToken(user);
+            String token = generateToken(account);
             response.setToken(token);
-        }
-        else{
+        } else {
             throw new AppException(ErrorCode.WRONG_PASSWORD);
         }
         response.setAuthenticated(true);
@@ -112,10 +112,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         invalidatedTokenRepository.save(invalidatedToken);
 
         String userName = signedJWT.getJWTClaimsSet().getSubject();
-        Users user = userRepository.findByUserName(userName).orElseThrow(
+        Account account = accountRepository.findByUserName(userName).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
-        String token = generateToken(user);
+        String token = generateToken(account);
         return AuthenticationResponse.builder()
                 .authenticated(true)
                 .token(token)
@@ -145,19 +145,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return signedJWT;
     }
 
-    private String generateToken(Users user) throws JOSEException {
+    private String generateToken(Account account) throws JOSEException {
         //Header
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         //Create claims
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getUserName())
+                .subject(account.getUserName())
                 .issuer("agris.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()
                 ))
                 .jwtID(UUID.randomUUID().toString()) //Use for refresh token task
-                .claim("scope", user.getRole().getName()) //Use for phan quyen
+                .claim("scope", account.getRole().getName()) //Use for phan quyen
                 .build();
         //Payload
         Payload payload = new Payload(claimsSet.toJSONObject());

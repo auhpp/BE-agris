@@ -1,14 +1,7 @@
 package com.agri_supplies_shop.entity;
 
-import com.agri_supplies_shop.enums.OrderDetailStatus;
-import com.agri_supplies_shop.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.ZonedDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -21,32 +14,19 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String note;
+    private Long quantity;
 
-    @Enumerated(EnumType.STRING)
-    private OrderDetailStatus orderStatus;
-
-    private Long amount;
-
-    private String paymentProvider;
-
-    @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus;
-
-    @CreatedDate
-    private ZonedDateTime createdAt;
-
-    @LastModifiedDate
-    private ZonedDateTime updatedAt;
+    private Long unitPrice;
 
     //Relationship
-    //user
+    //Order detail
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Users user;
+    private Order order;
 
-    //Order item
-    @OneToMany(mappedBy = "orderDetail")
-    private List<OrderItem> orderItems;
+    //shipment
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Shipment shipment;
 
 }

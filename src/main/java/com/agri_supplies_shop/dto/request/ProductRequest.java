@@ -33,4 +33,6 @@ public class ProductRequest {
 
     private List<VariantValueRequest> variantValues;
 
+    private String status;
+
 }

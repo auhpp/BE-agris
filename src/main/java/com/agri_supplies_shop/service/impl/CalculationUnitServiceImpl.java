@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class CalculationUnitServiceImpl implements CalculationUnitService {
     CalculationUnitConverter calculationUnitConverter;
 
     @Override
+    @Transactional
     public CalculationUnitResponse create(CalculationUnitRequest request) {
         CalculationUnit calculationUnit;
         if (request.getId() != null) {

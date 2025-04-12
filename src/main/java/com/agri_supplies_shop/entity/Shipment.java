@@ -3,7 +3,7 @@ package com.agri_supplies_shop.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -20,7 +20,7 @@ public class Shipment {
     @Column(nullable = false)
     private String name;
 
-    private ZonedDateTime expiry;
+    private LocalDate expiry;
 
     //Relationship
     //Shipment detail
@@ -34,4 +34,8 @@ public class Shipment {
     //Product variant value
     @ManyToOne
     private ProductVariantValue productVariantValue;
+
+    //Order item
+    @OneToMany(mappedBy = "shipment")
+    private List<OrderDetail> orderDetail;
 }

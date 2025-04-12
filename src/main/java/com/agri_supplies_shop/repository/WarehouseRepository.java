@@ -5,15 +5,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
+import org.springframework.data.repository.query.Param;
 
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
-    @Query(value = " select count(s.productVariantValue.id) " +
-            " from WarehouseDetail wd inner join Shipment s on wd.shipment.id = s.id" +
-            " group by s.productVariantValue.id"
+    @Query(value = "select count(*) from " +
+            "(select s.product_variant_value_id " +
+            " from warehouse_detail wd inner join shipment s on wd.shipment_id = s.id " +
+            "where wd.warehouse_id = :id " +
+            " group by s.product_variant_value_id) ", nativeQuery = true
     )
-    Integer countProductQuantity(Long warehouseId);
+    Long countProductQuantity(@Param("id") Long id);
 
     Page<Warehouse> findByNameContaining(String name, Pageable pageable);
 }

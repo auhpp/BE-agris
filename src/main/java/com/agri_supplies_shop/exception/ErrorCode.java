@@ -25,8 +25,11 @@ public enum ErrorCode {
     PHONE_NUMBER_EXIT(1016, "Phone number existed", HttpStatus.BAD_REQUEST),
     WAREHOUSE_RECEIPT_NOT_EXISTED(1017, "Warehouse receipt not existed", HttpStatus.BAD_REQUEST),
     WAREHOUSE_NOT_EXISTED(1018, "Warehouse not existed", HttpStatus.BAD_REQUEST),
-    CALCULATION_NOT_EXISTED(1019, "Calculation not existed", HttpStatus.BAD_REQUEST)
-    ;
+    CALCULATION_NOT_EXISTED(1019, "Calculation not existed", HttpStatus.BAD_REQUEST),
+    SHIPMENT_NOT_EXISTED(1020, "Shipment not existed", HttpStatus.BAD_REQUEST),
+    ACCOUNT_NOT_EXISTED(1020, "Account not existed", HttpStatus.BAD_REQUEST),
+    STAFF_NOT_EXISTED(1021, "Staff not existed", HttpStatus.BAD_REQUEST);
+
 
     private final int code;
     private final String message;

@@ -4,9 +4,12 @@ import com.agri_supplies_shop.converter.WarehouseConverter;
 import com.agri_supplies_shop.dto.request.WarehouseRequest;
 import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.WarehouseResponse;
-import com.agri_supplies_shop.entity.Warehouse;
+import com.agri_supplies_shop.entity.*;
+import com.agri_supplies_shop.enums.ImportGoodsStatus;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
+import com.agri_supplies_shop.repository.WarehouseDetailRepository;
+import com.agri_supplies_shop.repository.WarehouseReceiptRepository;
 import com.agri_supplies_shop.repository.WarehouseRepository;
 import com.agri_supplies_shop.service.WarehouseService;
 import lombok.AccessLevel;
@@ -18,6 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -26,6 +32,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     WarehouseRepository warehouseRepository;
 
     WarehouseConverter warehouseConverter;
+
+    WarehouseReceiptRepository warehouseReceiptRepository;
+
+    WarehouseDetailRepository warehouseDetailRepository;
 
     @Override
     @Transactional
@@ -61,6 +71,13 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public List<WarehouseResponse> getAll() {
+        return warehouseRepository.findAll().stream().map(
+                it -> warehouseConverter.toResponse(it)
+        ).toList();
+    }
+
+    @Override
     @Transactional
     public boolean delete(Long warehouseId) {
         Warehouse warehouse = warehouseRepository.findById(warehouseId).orElseThrow(
@@ -71,5 +88,49 @@ public class WarehouseServiceImpl implements WarehouseService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean importWarehouse(Long warehouseReceiptId) {
+        WarehouseReceipt warehouseReceipt = warehouseReceiptRepository.findById(warehouseReceiptId)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.WAREHOUSE_RECEIPT_NOT_EXISTED)
+                );
+//        WarehouseDetail warehouseDetail = new WarehouseDetail();
+        List<ReceiptDetail> receiptDetails = warehouseReceipt.getReceiptDetails();
+        //Flat map: trải các element trong  it.getShipmentDetails() thành một stream duy nhất
+        List<ShipmentDetail> shipmentDetails = receiptDetails.stream().flatMap(
+                it -> it.getShipmentDetails().stream()
+        ).toList();
+        shipmentDetails.forEach(
+                it -> {
+                    Shipment shipment = it.getShipment();
+                    if (shipment.getWarehouseDetails() != null) {
+                        WarehouseDetail warehouseDetail = shipment.getWarehouseDetails().stream().filter(
+                                wD -> wD.getWarehouse().getId() == warehouseReceipt.getWarehouse().getId()
+                        ).findFirst().orElse(null);
+                        if (warehouseDetail != null) {
+                            warehouseDetail.setStock(warehouseDetail.getStock() + it.getQuantity());
+                            warehouseDetailRepository.save(warehouseDetail);
+                        } else {
+                            warehouseDetail = new WarehouseDetail();
+                            warehouseDetail.setWarehouse(warehouseReceipt.getWarehouse());
+                            warehouseDetail.setShipment(shipment);
+                            warehouseDetail.setStock(it.getQuantity());
+                            warehouseDetailRepository.save(warehouseDetail);
+                        }
+                    } else {
+                        WarehouseDetail detail = new WarehouseDetail();
+                        detail.setWarehouse(warehouseReceipt.getWarehouse());
+                        detail.setShipment(shipment);
+                        detail.setStock(it.getQuantity());
+                        warehouseDetailRepository.save(detail);
+                    }
+                }
+        );
+        warehouseReceipt.setImportStatus(ImportGoodsStatus.IMPORTED_GOODS);
+        warehouseReceipt.setImportDate(ZonedDateTime.now());
+        warehouseReceiptRepository.save(warehouseReceipt);
+        return true;
     }
 }

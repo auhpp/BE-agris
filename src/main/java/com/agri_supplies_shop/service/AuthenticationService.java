@@ -11,8 +11,12 @@ import com.nimbusds.jose.JOSEException;
 import java.text.ParseException;
 
 public interface AuthenticationService {
+
     AuthenticationResponse authenticate(AuthenticationRequest request) throws JOSEException;
+
     IntrospectResponse introspect(IntrospectRequest request) throws ParseException, JOSEException;
+
     void logout(LogoutRequest request) throws ParseException, JOSEException;
+
     AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException;
 }

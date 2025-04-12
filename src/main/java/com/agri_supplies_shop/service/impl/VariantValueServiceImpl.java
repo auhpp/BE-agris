@@ -1,10 +1,9 @@
 package com.agri_supplies_shop.service.impl;
 
 import com.agri_supplies_shop.dto.request.VariantRequest;
+import com.agri_supplies_shop.dto.response.VariantResponse;
 import com.agri_supplies_shop.entity.Variant;
 import com.agri_supplies_shop.entity.VariantValue;
-import com.agri_supplies_shop.exception.AppException;
-import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.VariantRepository;
 import com.agri_supplies_shop.repository.VariantValueRepository;
 import com.agri_supplies_shop.service.VariantValueService;
@@ -46,5 +45,24 @@ public class VariantValueServiceImpl implements VariantValueService {
                 }
         ).toList();
         variantValueRepository.saveAll(variantValues);
+    }
+
+    @Override
+    public List<VariantResponse> getAllVariant() {
+        return variantRepository.findAll().stream().map(
+                it -> VariantResponse.builder()
+                        .name(it.getName())
+                        .build()
+        ).toList();
+    }
+
+    @Override
+    public List<VariantResponse> getVariantValue(String name) {
+        Variant variant = variantRepository.findByName(name);
+        return variant.getVariantValues().stream().map(
+                it -> VariantResponse.builder()
+                        .value(it.getValue())
+                        .build()
+        ).toList();
     }
 }

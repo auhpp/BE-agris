@@ -20,11 +20,11 @@ public class WarehouseConverter {
 
     public WarehouseResponse toResponse(Warehouse warehouse) {
         WarehouseResponse response = modelMapper.map(warehouse, WarehouseResponse.class);
-        Integer cnt = warehouseRepository.countProductQuantity(warehouse.getId());
+        Long cnt = warehouseRepository.countProductQuantity(warehouse.getId());
         if (cnt == null) {
-            cnt = 0;
+            cnt = 0L;
         }
-        response.setProductQuantity(cnt);
+        response.setProductQuantity(Math.toIntExact(cnt));
         if (warehouse.getWarehouseDetails() != null) {
             response.setStock(warehouse.getWarehouseDetails().stream()
                     .map(it -> it.getStock())

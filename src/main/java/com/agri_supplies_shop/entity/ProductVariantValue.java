@@ -18,9 +18,10 @@ public class ProductVariantValue {
     private Long id;
 
     @Column(nullable = false)
+    private String sku;
+
     private Long sellingPrice;
 
-    @Column(nullable = false)
     private Long capitalPrice;
 
     private Boolean isShipmentManage;
@@ -31,11 +32,7 @@ public class ProductVariantValue {
     //Relationship
     //cart item
     @OneToMany(mappedBy = "productVariantValue", cascade = {CascadeType.REMOVE})
-    private List<CartItem> cartItems;
-
-    //order item
-    @OneToMany(mappedBy = "productVariantValue")
-    private List<OrderItem> orderItems;
+    private List<Cart> carts;
 
     //product
     @ManyToOne

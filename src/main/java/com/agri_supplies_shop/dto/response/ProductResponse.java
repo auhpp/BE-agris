@@ -23,14 +23,16 @@ public class ProductResponse {
 
     private String thumbnail;
 
-    private CategoryResponse category;
+    private Long stock;
 
-//    private SupplierResponse supplier;
+    private CategoryResponse category;
 
     private List<AttributeResponse> attributes;
 
     private List<ProductVariantValueResponse> variants;
 
     private List<ImageResponse> images;
+
+    private String status;
 
 }

@@ -11,13 +11,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AddressRequest {
 
-        private Long id;
+    private Long id;
 
-        private String fullName;
+    private String fullName;
 
-        private String phoneNumber;
+    private String phoneNumber;
 
-        private String addressName;
+    private String province;
 
-        private Boolean defaultChoice;
+    private String ward;
+
+    private String district;
+
+    private String deliveryAddress;
+
+    private Boolean defaultChoice;
 }

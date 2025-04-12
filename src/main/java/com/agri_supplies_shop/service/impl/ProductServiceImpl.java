@@ -7,6 +7,7 @@ import com.agri_supplies_shop.dto.response.*;
 import com.agri_supplies_shop.entity.Category;
 import com.agri_supplies_shop.entity.Product;
 import com.agri_supplies_shop.entity.ProductImage;
+import com.agri_supplies_shop.enums.Status;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.CategoryRepository;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +61,12 @@ public class ProductServiceImpl implements ProductService {
         } else {
             //create
             product = productConverter.toEntity(productRequest);
+        }
+
+        if (Objects.equals(productRequest.getStatus(), "ACTIVE")) {
+            product.setStatus(Status.ACTIVE);
+        } else {
+            product.setStatus(Status.INACTIVE);
         }
 
         //Get category entity

@@ -3,13 +3,17 @@ package com.agri_supplies_shop.converter;
 import com.agri_supplies_shop.dto.request.ProductRequest;
 import com.agri_supplies_shop.dto.response.*;
 import com.agri_supplies_shop.entity.Product;
+import com.agri_supplies_shop.entity.Shipment;
+import com.agri_supplies_shop.entity.WarehouseDetail;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -76,6 +80,27 @@ public class ProductConverter {
                                     .filePath(it.getPath()).build()
                     ).toList();
             response.setImages(imageResponses);
+        }
+
+        //stock
+        if (product.getProductVariantValues() != null) {
+            List<Shipment> shipments = product.getProductVariantValues().stream().flatMap(
+                    it -> it.getShipments().stream().filter(
+                            sm ->
+                                    Optional.ofNullable(sm).map(Shipment::getExpiry).filter(
+                                            expiry -> expiry.isAfter(LocalDate.now())
+                                    ).isPresent()
+                    )
+            ).toList();
+            List<WarehouseDetail> warehouseDetails = shipments.stream().flatMap(
+                    it -> it.getWarehouseDetails().stream()
+            ).toList();
+            Long stock = warehouseDetails.stream().reduce(
+                    0L, (partialAgeResult, wd) -> partialAgeResult + wd.getStock(), Long::sum
+            );
+            response.setStock(stock);
+        } else {
+            response.setStock(0L);
         }
         return response;
     }

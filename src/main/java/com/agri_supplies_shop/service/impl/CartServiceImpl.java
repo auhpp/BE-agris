@@ -4,14 +4,16 @@ import com.agri_supplies_shop.converter.CartConverter;
 import com.agri_supplies_shop.dto.request.CartItemRequest;
 import com.agri_supplies_shop.dto.response.CartItemResponse;
 import com.agri_supplies_shop.dto.response.PageResponse;
-import com.agri_supplies_shop.entity.CartItem;
+import com.agri_supplies_shop.entity.Account;
+import com.agri_supplies_shop.entity.Cart;
+import com.agri_supplies_shop.entity.Customer;
 import com.agri_supplies_shop.entity.ProductVariantValue;
-import com.agri_supplies_shop.entity.Users;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
+import com.agri_supplies_shop.repository.AccountRepository;
 import com.agri_supplies_shop.repository.CartRepository;
+import com.agri_supplies_shop.repository.CustomerRepository;
 import com.agri_supplies_shop.repository.ProductVariantValueRepository;
-import com.agri_supplies_shop.repository.UserRepository;
 import com.agri_supplies_shop.service.CartService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,9 @@ import org.springframework.stereotype.Service;
 public class CartServiceImpl implements CartService {
     ProductVariantValueRepository productVariantValueRepository;
 
-    UserRepository userRepository;
+    CustomerRepository customerRepository;
+
+    AccountRepository accountRepository;
 
     CartRepository cartRepository;
 
@@ -40,35 +44,41 @@ public class CartServiceImpl implements CartService {
     public CartItemResponse addToCart(CartItemRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        Users user = userRepository.findByUserName(userName).orElseThrow(
+        Account account = accountRepository.findByUserName(userName).orElseThrow(
+                () -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED)
+        );
+        Customer customer = customerRepository.findByAccountId(account.getId()).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
 
-        CartItem cartItem = cartRepository.findByProductVariantValueIdAndUserId(
-                request.getProductVariantId(), user.getId()
+        Cart cart = cartRepository.findByProductVariantValueIdAndCustomerId(
+                request.getProductVariantId(), customer.getId()
         );
-        if (cartItem != null) {
-            cartConverter.toExistsEntity(request, cartItem);
+        if (cart != null) {
+            cartConverter.toExistsEntity(request, cart);
         } else {
-            cartItem = cartConverter.toEntity(request);
-            cartItem.setUser(user);
+            cart = cartConverter.toEntity(request);
+            cart.setCustomer(customer);
         }
         ProductVariantValue productVariant = productVariantValueRepository.findById(request.getProductVariantId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_VALUE_NOT_FOUND));
-        cartItem.setProductVariantValue(productVariant);
-        return cartConverter.toResponse(cartRepository.save(cartItem));
+        cart.setProductVariantValue(productVariant);
+        return cartConverter.toResponse(cartRepository.save(cart));
     }
 
     @Override
     public PageResponse<CartItemResponse> getAll(int page, int size) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        Users user = userRepository.findByUserName(userName).orElseThrow(
+        Account account = accountRepository.findByUserName(userName).orElseThrow(
+                () -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED)
+        );
+        Customer customer = customerRepository.findByAccountId(account.getId()).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
         Pageable pageable = PageRequest.of(page - 1, size,
                 Sort.by(Sort.Direction.DESC, "id"));
-        Page<CartItem> pageData = cartRepository.findAllByUserId(user.getId(), pageable);
+        Page<Cart> pageData = cartRepository.findAllByCustomerId(customer.getId(), pageable);
         return PageResponse.<CartItemResponse>builder()
                 .currentPage(page)
                 .totalElements(pageData.getTotalElements())

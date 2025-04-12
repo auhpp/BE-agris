@@ -23,7 +23,7 @@ public class Role {
     private String description;
 
     //Relationship
-    //user
+    //staff
     @OneToMany(mappedBy = "role")
-    private List<Users> users;
+    private List<Account> accounts;
 }
