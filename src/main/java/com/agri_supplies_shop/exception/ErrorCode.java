@@ -31,7 +31,8 @@ public enum ErrorCode {
     STAFF_NOT_EXISTED(1021, "Staff not existed", HttpStatus.BAD_REQUEST),
     ORDER_NOT_EXISTED(1021, "Orders not existed", HttpStatus.BAD_REQUEST),
     INSUFFICIENT_INVENTORY(1022, "Insufficient inventory not existed", HttpStatus.BAD_REQUEST),
-    CATEGORY_EXISTED(1023, "Category existed", HttpStatus.BAD_REQUEST);
+    CATEGORY_EXISTED(1023, "Category existed", HttpStatus.BAD_REQUEST),
+    CALCULATION_EXISTED(1019, "Calculation existed", HttpStatus.BAD_REQUEST);
 
 
     private final int code;
