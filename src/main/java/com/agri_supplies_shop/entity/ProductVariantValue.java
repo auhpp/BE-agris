@@ -24,7 +24,7 @@ public class ProductVariantValue {
 
     private Long capitalPrice;
 
-    private Boolean isShipmentManage;
+    private Long reserved;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -46,5 +46,10 @@ public class ProductVariantValue {
     //Shipment
     @OneToMany(mappedBy = "productVariantValue")
     private List<Shipment> shipments;
+
+    //Order detail
+    @OneToMany(mappedBy = "productVariantValue")
+    private List<OrderDetail> orderDetails;
+
 
 }

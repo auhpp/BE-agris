@@ -1,13 +1,16 @@
 package com.agri_supplies_shop.service.impl;
 
 import com.agri_supplies_shop.converter.WarehouseConverter;
+import com.agri_supplies_shop.dto.request.WarehouseDetailRequest;
 import com.agri_supplies_shop.dto.request.WarehouseRequest;
 import com.agri_supplies_shop.dto.response.PageResponse;
+import com.agri_supplies_shop.dto.response.UpdateStockResponse;
 import com.agri_supplies_shop.dto.response.WarehouseResponse;
 import com.agri_supplies_shop.entity.*;
 import com.agri_supplies_shop.enums.ImportGoodsStatus;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
+import com.agri_supplies_shop.repository.ProductVariantValueRepository;
 import com.agri_supplies_shop.repository.WarehouseDetailRepository;
 import com.agri_supplies_shop.repository.WarehouseReceiptRepository;
 import com.agri_supplies_shop.repository.WarehouseRepository;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,6 +40,8 @@ public class WarehouseServiceImpl implements WarehouseService {
     WarehouseReceiptRepository warehouseReceiptRepository;
 
     WarehouseDetailRepository warehouseDetailRepository;
+
+    ProductVariantValueRepository productVariantValueRepository;
 
     @Override
     @Transactional
@@ -133,4 +139,48 @@ public class WarehouseServiceImpl implements WarehouseService {
         warehouseReceiptRepository.save(warehouseReceipt);
         return true;
     }
+
+    @Override
+    @Transactional
+    public List<UpdateStockResponse> minusStock(Long quantity, WarehouseDetailRequest whDetails) {
+        ProductVariantValue variantValue = productVariantValueRepository.findById(whDetails.getProductVariantId()).orElseThrow(
+                () -> new AppException(ErrorCode.PRODUCT_VARIANT_VALUE_NOT_FOUND)
+        );
+        List<WarehouseDetail> warehouseDetails = whDetails.getWarehouseDetailId().stream().map(
+                it -> warehouseDetailRepository.findById(it).orElseThrow(
+                        () -> new AppException(ErrorCode.WAREHOUSE_NOT_EXISTED)
+                )
+        ).toList();
+        Long quantityProduct = quantity;
+        List<UpdateStockResponse> updateStockResponses = new ArrayList<>();
+        for (WarehouseDetail wd : warehouseDetails) {
+            if (wd.getStock() >= quantityProduct) {
+                wd.setStock(wd.getStock() - quantityProduct);
+                quantityProduct = 0L;
+                warehouseDetailRepository.save(wd);
+                UpdateStockResponse updateStockResponse = UpdateStockResponse.builder()
+                        .warehouseDetailId(wd.getId())
+                        .quantity(quantity)
+                        .build();
+                updateStockResponses.add(updateStockResponse);
+                break;
+            } else {
+                quantityProduct = quantityProduct - wd.getStock();
+                wd.setStock(0L);
+                warehouseDetailRepository.save(wd);
+                UpdateStockResponse updateStockResponse = UpdateStockResponse.builder()
+                        .warehouseDetailId(wd.getId())
+                        .quantity(quantity - quantityProduct)
+                        .build();
+                updateStockResponses.add(updateStockResponse);
+            }
+        }
+        if (quantityProduct != 0L) {
+            throw new AppException(ErrorCode.INSUFFICIENT_INVENTORY);
+        }
+        variantValue.setReserved(variantValue.getReserved() - quantity);
+        productVariantValueRepository.save(variantValue);
+        return updateStockResponses;
+    }
+
 }

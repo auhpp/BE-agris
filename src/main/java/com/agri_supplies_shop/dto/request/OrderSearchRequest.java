@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class    OrderDetailRequest {
-    private Long quantity;
-    private Long unitPrice;
-    private Long productVariantId;
+public class OrderSearchRequest {
+    private String orderStatus;
+    private String paymentStatus;
+    private Long id;
 }

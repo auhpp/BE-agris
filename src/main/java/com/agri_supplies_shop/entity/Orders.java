@@ -1,6 +1,6 @@
 package com.agri_supplies_shop.entity;
 
-import com.agri_supplies_shop.enums.OrderDetailStatus;
+import com.agri_supplies_shop.enums.OrderStatus;
 import com.agri_supplies_shop.enums.PaymentMethod;
 import com.agri_supplies_shop.enums.PaymentStatus;
 import jakarta.persistence.*;
@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order {
+public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -25,7 +25,7 @@ public class Order {
     private String note;
 
     @Enumerated(EnumType.STRING)
-    private OrderDetailStatus orderStatus;
+    private OrderStatus orderStatus;
 
     private Long amount;
 
@@ -54,14 +54,18 @@ public class Order {
 
     private String deliveryAddress;
 
+    private String reasonForCancellation;
+
+    private String canceller;
+
     //Relationship
     //Customer
     @ManyToOne
     @JoinColumn(nullable = false)
     private Customer customer;
 
-    //Order item
-    @OneToMany(mappedBy = "order")
+    //Orders item
+    @OneToMany(mappedBy = "orders")
     private List<OrderDetail> orderDetails;
 
 }

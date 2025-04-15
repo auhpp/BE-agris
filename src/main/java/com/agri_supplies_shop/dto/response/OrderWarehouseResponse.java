@@ -6,17 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ShipmentResponse {
+@AllArgsConstructor
+public class OrderWarehouseResponse {
     private Long id;
-    private String name;
+    private String warehouseName;
+    private String shipmentName;
     private LocalDate expiry;
-    private Long quantity;
-    private String status;
-    private List<WarehouseDetailResponse> warehouseDetail;
 }

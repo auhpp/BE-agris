@@ -50,9 +50,9 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<Cart> carts;
 
-    //Order detail
+    //Orders detail
     @OneToMany(mappedBy = "customer")
-    private List<Order> orders;
+    private List<Orders> orders;
 
     //account
     @OneToOne

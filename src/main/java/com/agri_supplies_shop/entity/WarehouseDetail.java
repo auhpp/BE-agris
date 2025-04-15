@@ -3,6 +3,8 @@ package com.agri_supplies_shop.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -15,7 +17,7 @@ public class WarehouseDetail {
     private Long id;
 
     @Column(nullable = false)
-    private int stock;
+    private Long stock;
 
     //Relationship
     //warehouse
@@ -25,4 +27,8 @@ public class WarehouseDetail {
     //Shipment
     @ManyToOne
     private Shipment shipment;
+
+    //order warehouse
+    @OneToMany(mappedBy = "warehouseDetail")
+    private List<OrderWarehouse> orderWarehouses;
 }

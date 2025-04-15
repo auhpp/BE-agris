@@ -16,6 +16,6 @@ public class ShipmentRequest {
     private Long id;
     private String name;
     private LocalDate expiry;
-    private int quantity;
+    private Long quantity;
     private Long productVariantId;
 }

@@ -21,4 +21,7 @@ public class ProductVariantValueResponse {
     private String name;
     private CalculationUnitResponse calculationUnit;
     private String thumbnail;
+    private Long productId;
+    private Long reserved;
+
 }

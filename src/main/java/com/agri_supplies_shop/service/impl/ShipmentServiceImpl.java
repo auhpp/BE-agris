@@ -25,8 +25,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,9 +49,14 @@ public class ShipmentServiceImpl implements ShipmentService {
         );
         List<Shipment> shipments = variantValue.getShipments();
         if (!shipments.isEmpty()) {
-            return shipments.stream().map(
+            List<ShipmentResponse> shipmentsRes = shipments.stream().map(
                     it -> shipmentConverter.toResponse(it)
-            ).toList();
+            ).collect(Collectors.toList());
+            if (shipmentsRes.get(0).getExpiry() != null) {
+                Comparator<ShipmentResponse> comparatorAsc = Comparator.comparing(ShipmentResponse::getExpiry);
+                Collections.sort(shipmentsRes, comparatorAsc);
+            }
+            return shipmentsRes;
         }
         return List.of();
     }

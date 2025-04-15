@@ -35,4 +35,6 @@ public class ProductResponse {
 
     private String status;
 
+    private Long reserved;
+
 }

@@ -3,6 +3,7 @@ package com.agri_supplies_shop.web.rest;
 import com.agri_supplies_shop.dto.request.CategoryRequest;
 import com.agri_supplies_shop.dto.response.ApiResponse;
 import com.agri_supplies_shop.dto.response.CategoryResponse;
+import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.service.CategoryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +41,27 @@ public class CategoryResource {
                 .build();
     }
 
+    @GetMapping("/search")
+    public ApiResponse<PageResponse<CategoryResponse>> search(@RequestParam(name = "name",
+                                                                      defaultValue = "") String name,
+                                                              @RequestParam(name = "size", required = false,
+                                                                      defaultValue = "10") int size,
+                                                              @RequestParam(name = "page", required = false,
+                                                                      defaultValue = "1") int page
+    ) {
+        return ApiResponse.<PageResponse<CategoryResponse>>builder()
+                .code(200)
+                .result(
+                        categoryService.search(name, page, size)
+                )
+                .build();
+    }
+
     @DeleteMapping("/{id}")
-    public void getAllCategories(@PathVariable("id") Long id) {
+    public ApiResponse deleteCategory(@PathVariable("id") Long id) {
         categoryService.delete(id);
+        return ApiResponse.builder()
+                .code(200)
+                .build();
     }
 }
