@@ -9,21 +9,16 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShipmentDetail {
-
+public class OrderWarehouse {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(nullable = false)
     private Long quantity;
 
-    //Relationship
-    //receipt detail
     @ManyToOne
-    private ReceiptDetail receiptDetail;
+    private OrderDetail orderDetail;
 
-    //shipment
     @ManyToOne
-    private Shipment shipment;
+    private WarehouseDetail warehouseDetail;
 }

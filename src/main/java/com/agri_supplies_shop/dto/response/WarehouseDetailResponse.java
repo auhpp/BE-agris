@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WarehouseResponse {
-    private Long id;
-    private String name;
-    private String location;
-    private String description;
-    private int productQuantity;
+public class WarehouseDetailResponse {
+    private String warehouseName;
     private Long stock;
+    private Long warehouseDetailId;
 }

@@ -28,11 +28,11 @@ public class WarehouseConverter {
         if (warehouse.getWarehouseDetails() != null) {
             response.setStock(warehouse.getWarehouseDetails().stream()
                     .map(it -> it.getStock())
-                    .reduce(0,
+                    .reduce(0L,
                             (a, b) -> a + b
                     ));
         } else {
-            response.setStock(0);
+            response.setStock(0L);
         }
         return response;
     }

@@ -3,6 +3,8 @@ package com.agri_supplies_shop.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -19,14 +21,17 @@ public class OrderDetail {
     private Long unitPrice;
 
     //Relationship
-    //Order detail
+    //Orders
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Order order;
+    private Orders orders;
 
-    //shipment
+    //product variant
     @ManyToOne
-    @JoinColumn(nullable = false)
-    private Shipment shipment;
+    private ProductVariantValue productVariantValue;
+
+    //order warehouse
+    @OneToMany(mappedBy = "orderDetail")
+    private List<OrderWarehouse> orderWarehouses;
 
 }

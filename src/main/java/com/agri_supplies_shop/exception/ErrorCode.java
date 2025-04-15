@@ -19,7 +19,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(1010, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     WRONG_PASSWORD(1011, "Wrong password", HttpStatus.BAD_REQUEST),
     CART_ITEM_NOT_FOUND(1012, "Cart item not found", HttpStatus.BAD_REQUEST),
-    DELETE_FAILED(1013, "The product is in one order", HttpStatus.BAD_REQUEST),
+    DELETE_FAILED(1013, "The product is in one orders", HttpStatus.BAD_REQUEST),
     FILE_NOT_SUPPORTED(1014, "only .jpeg and .png images are supported", HttpStatus.BAD_REQUEST),
     EMAIL_EXIT(1015, "Email existed", HttpStatus.BAD_REQUEST),
     PHONE_NUMBER_EXIT(1016, "Phone number existed", HttpStatus.BAD_REQUEST),
@@ -28,7 +28,10 @@ public enum ErrorCode {
     CALCULATION_NOT_EXISTED(1019, "Calculation not existed", HttpStatus.BAD_REQUEST),
     SHIPMENT_NOT_EXISTED(1020, "Shipment not existed", HttpStatus.BAD_REQUEST),
     ACCOUNT_NOT_EXISTED(1020, "Account not existed", HttpStatus.BAD_REQUEST),
-    STAFF_NOT_EXISTED(1021, "Staff not existed", HttpStatus.BAD_REQUEST);
+    STAFF_NOT_EXISTED(1021, "Staff not existed", HttpStatus.BAD_REQUEST),
+    ORDER_NOT_EXISTED(1021, "Orders not existed", HttpStatus.BAD_REQUEST),
+    INSUFFICIENT_INVENTORY(1022, "Insufficient inventory not existed", HttpStatus.BAD_REQUEST),
+    CATEGORY_EXISTED(1023, "Category existed", HttpStatus.BAD_REQUEST);
 
 
     private final int code;

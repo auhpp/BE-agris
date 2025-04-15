@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class    OrderDetailRequest {
-    private Long quantity;
-    private Long unitPrice;
-    private Long productVariantId;
+@NoArgsConstructor
+public class CancelOrderRequest {
+    private Long orderId;
+    private String reasonForCancellation;
 }

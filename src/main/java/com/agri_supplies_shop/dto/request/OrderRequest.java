@@ -24,9 +24,9 @@ public class OrderRequest {
 
     private Long amount;
 
-    private String paymentProvider;
+    private String paymentMethod;
 
-    private PaymentMethod paymentMethod;
+    private String orderStatus;
 
     private AddressRequest addressRequest;
 

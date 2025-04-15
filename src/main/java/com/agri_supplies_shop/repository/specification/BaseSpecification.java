@@ -1,6 +1,5 @@
 package com.agri_supplies_shop.repository.specification;
 
-import com.agri_supplies_shop.entity.Shipment;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -11,11 +10,11 @@ import org.springframework.data.jpa.domain.Specification;
 import java.time.LocalDate;
 
 @AllArgsConstructor
-public class BaseSpecification implements Specification<Shipment> {
+public class BaseSpecification<T> implements Specification<T> {
     private SearchCriteria criteria;
 
     @Override
-    public Predicate toPredicate(Root<Shipment> root,
+    public Predicate toPredicate(Root<T> root,
                                  CriteriaQuery<?> query,
                                  CriteriaBuilder builder) {
         if (criteria.getOperation().equalsIgnoreCase(">")) {

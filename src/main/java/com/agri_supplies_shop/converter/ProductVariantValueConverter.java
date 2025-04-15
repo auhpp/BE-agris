@@ -18,10 +18,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -81,25 +79,25 @@ public class ProductVariantValueConverter {
         response.setVariantValues(variantResponses);
         //Stock
         if (request.getShipments() != null) {
-            List<Shipment> shipmentsHasExpiry = request.getShipments().stream().filter(
-                    sm ->
-                            Optional.ofNullable(sm).map(Shipment::getExpiry).filter(
-                                    expiry -> expiry.isAfter(LocalDate.now())
-                            ).isPresent()
-            ).toList();
-            List<Shipment> shipmentsNoExpiry = request.getShipments().stream().filter(
-                    sm ->
-                            sm.getExpiry() == null
-            ).toList();
-            List<Shipment> shipments = Stream.of(shipmentsNoExpiry, shipmentsHasExpiry)
-                    .flatMap(Collection::stream).toList();
+            List<Shipment> shipments;
+            if (request.getShipments().get(0).getExpiry() != null) {
+                shipments = request.getShipments().stream().filter(
+                        sm ->
+                                Optional.ofNullable(sm).map(Shipment::getExpiry).filter(
+                                        expiry -> expiry.isAfter(LocalDate.now())
+                                ).isPresent()
+                ).toList();
+            } else {
+                shipments = request.getShipments();
+            }
             List<WarehouseDetail> warehouseDetails = shipments.stream().flatMap(
                     it -> it.getWarehouseDetails().stream()
             ).toList();
             Long stock = warehouseDetails.stream().reduce(
                     0L, (result, wd) -> result + wd.getStock(), Long::sum
             );
-            response.setStock(stock);
+            Long stockAvailable = stock - request.getReserved();
+            response.setStock(stockAvailable);
         } else {
             response.setStock(0L);
         }
@@ -107,6 +105,9 @@ public class ProductVariantValueConverter {
         response.setThumbnail(request.getProduct().getThumbnail());
         //name
         response.setName(request.getProduct().getName());
+        //product
+        response.setProductId(request.getProduct().getId());
+
         return response;
     }
 }

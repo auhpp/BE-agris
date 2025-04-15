@@ -3,6 +3,7 @@ package com.agri_supplies_shop.service.impl;
 import com.agri_supplies_shop.converter.CategoryConverter;
 import com.agri_supplies_shop.dto.request.CategoryRequest;
 import com.agri_supplies_shop.dto.response.CategoryResponse;
+import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.entity.Category;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
@@ -12,6 +13,9 @@ import com.agri_supplies_shop.service.ProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +34,22 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse createCategory(CategoryRequest categoryRequest) {
-        Category category = Category
-                .builder()
-                .name(categoryRequest.getName())
-                .build();
+        Category category;
+        category = categoryRepository.findByName(categoryRequest.getName().trim());
+        if (category != null) {
+            throw new AppException(ErrorCode.CATEGORY_EXISTED);
+        }
+        if (categoryRequest.getId() != null) {
+            category = categoryRepository.findById(categoryRequest.getId()).orElseThrow(
+                    () -> new AppException(ErrorCode.CATEGORY_NOT_FOUND)
+            );
+            category.setName(categoryRequest.getName());
+        } else {
+            category = Category
+                    .builder()
+                    .name(categoryRequest.getName())
+                    .build();
+        }
         categoryRepository.save(category);
         return categoryConverter.toCategoryResponse(category);
     }
@@ -56,12 +72,24 @@ public class CategoryServiceImpl implements CategoryService {
                 () -> new AppException(ErrorCode.CATEGORY_NOT_FOUND)
         );
         if (!category.getProducts().isEmpty()) {
-            List<Long> productIds = category.getProducts().stream().map(
-                    it -> it.getId()
-            ).toList();
-            productService.delete(productIds);
+            throw new AppException(ErrorCode.DELETE_FAILED);
         }
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public PageResponse<CategoryResponse> search(String name, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Category> categories = categoryRepository.findByNameContaining(name, pageable);
+        return PageResponse.<CategoryResponse>builder()
+                .data(categories.stream().map(
+                        categoryConverter::toCategoryResponse
+                ).toList())
+                .pageSize(categories.getSize())
+                .totalPage(categories.getTotalPages())
+                .totalElements(categories.getTotalElements())
+                .currentPage(page)
+                .build();
     }
 
 }

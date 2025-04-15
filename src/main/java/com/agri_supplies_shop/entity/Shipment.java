@@ -35,7 +35,4 @@ public class Shipment {
     @ManyToOne
     private ProductVariantValue productVariantValue;
 
-    //Order item
-    @OneToMany(mappedBy = "shipment")
-    private List<OrderDetail> orderDetail;
 }
