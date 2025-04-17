@@ -45,5 +45,11 @@ public class StaffResource {
                 .build();
     }
 
-
+    @GetMapping("/myInfo")
+    public ApiResponse<StaffResponse> getMyInfo() {
+        return ApiResponse.<StaffResponse>builder()
+                .code(200)
+                .result(staffService.getMyInfo())
+                .build();
+    }
 }

@@ -1,6 +1,7 @@
 package com.agri_supplies_shop.web.rest;
 
 import com.agri_supplies_shop.dto.request.WarehouseReceiptRequest;
+import com.agri_supplies_shop.dto.request.WarehouseReceiptSearchRequest;
 import com.agri_supplies_shop.dto.request.WarehouseRequest;
 import com.agri_supplies_shop.dto.response.ApiResponse;
 import com.agri_supplies_shop.dto.response.PageResponse;
@@ -61,13 +62,15 @@ public class WarehouseResource {
                 .build();
     }
 
-    @GetMapping("/receipt")
-    public ApiResponse getAll(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                              @RequestParam(name = "size", required = false, defaultValue = "10") int size
+    @GetMapping("/receipt/search")
+    public ApiResponse search(
+            WarehouseReceiptSearchRequest request,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") int size
     ) {
         return ApiResponse.<PageResponse<WarehouseReceiptResponse>>builder()
                 .code(200)
-                .result(warehouseReceiptService.getAll(page, size))
+                .result(warehouseReceiptService.search(request, page, size))
                 .build();
     }
 

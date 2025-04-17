@@ -1,7 +1,6 @@
 package com.agri_supplies_shop.entity;
 
 import com.agri_supplies_shop.enums.PaymentMethod;
-import com.agri_supplies_shop.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,11 +27,16 @@ public class PaymentSlip {
 
     private String note;
 
-    @Enumerated(EnumType.STRING)
-    private PaymentType paymentType;
+    private Long payeeId;
+
+    private String payeeName;
+
+    private boolean isDebt;
 
     //Relationship
-    //warehouse receipt
     @ManyToOne
-    private WarehouseReceipt warehouseReceipt;
+    private PayeeType payeeType;
+
+    @ManyToOne
+    private PaymentReason paymentReason;
 }

@@ -43,10 +43,6 @@ public class WarehouseReceipt {
     @ManyToOne
     private Supplier supplier;
 
-    //payment slip
-    @OneToMany(mappedBy = "warehouseReceipt")
-    private List<PaymentSlip> paymentSlips;
-
     //warehouse
     @ManyToOne
     private Warehouse warehouse;

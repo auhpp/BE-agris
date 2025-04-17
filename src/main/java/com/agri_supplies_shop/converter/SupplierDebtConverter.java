@@ -17,9 +17,6 @@ public class SupplierDebtConverter {
 
     public PaymentSlipResponse toResponse(PaymentSlip supplierDebt) {
         PaymentSlipResponse response = modelMapper.map(supplierDebt, PaymentSlipResponse.class);
-        response.setWarehouseReceipt(
-                warehouseReceiptConverter.toResponse(supplierDebt.getWarehouseReceipt())
-        );
         return response;
     }
 }

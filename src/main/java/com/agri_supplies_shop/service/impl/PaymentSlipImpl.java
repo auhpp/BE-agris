@@ -1,51 +1,146 @@
 package com.agri_supplies_shop.service.impl;
 
-import com.agri_supplies_shop.converter.SupplierDebtConverter;
+import com.agri_supplies_shop.converter.PaymentSlipConverter;
 import com.agri_supplies_shop.dto.request.PaymentSlipRequest;
+import com.agri_supplies_shop.dto.request.PaymentSlipSearchRequest;
+import com.agri_supplies_shop.dto.response.PageResponse;
+import com.agri_supplies_shop.dto.response.PayeeTypeResponse;
 import com.agri_supplies_shop.dto.response.PaymentSlipResponse;
+import com.agri_supplies_shop.entity.PayeeType;
+import com.agri_supplies_shop.entity.PaymentReason;
 import com.agri_supplies_shop.entity.PaymentSlip;
-import com.agri_supplies_shop.entity.WarehouseReceipt;
+import com.agri_supplies_shop.enums.PayeeTypeEnum;
 import com.agri_supplies_shop.enums.PaymentMethod;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
-import com.agri_supplies_shop.repository.SupplierDebtRepository;
-import com.agri_supplies_shop.repository.WarehouseReceiptRepository;
+import com.agri_supplies_shop.repository.PayeeTypeRepository;
+import com.agri_supplies_shop.repository.PaymentReasonRepository;
+import com.agri_supplies_shop.repository.PaymentSlipRepository;
+import com.agri_supplies_shop.repository.specification.BaseSpecification;
+import com.agri_supplies_shop.repository.specification.SearchCriteria;
 import com.agri_supplies_shop.service.PaymentSlipService;
+import com.agri_supplies_shop.service.SupplierService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PaymentSlipImpl implements PaymentSlipService {
-    SupplierDebtRepository supplierDebtRepository;
-    WarehouseReceiptRepository warehouseReceiptRepository;
-    SupplierDebtConverter supplierDebtConverter;
+
+    PaymentReasonRepository paymentReasonRepository;
+    PayeeTypeRepository payeeTypeRepository;
+    PaymentSlipConverter paymentSlipConverter;
+    SupplierService supplierService;
+    PaymentSlipRepository paymentSlipRepository;
 
     @Override
     @Transactional
     public PaymentSlipResponse create(PaymentSlipRequest request) {
-        WarehouseReceipt warehouseReceipt = warehouseReceiptRepository.findById(
-                request.getWarehouseReceiptId()
-        ).orElseThrow(() -> new AppException(ErrorCode.WAREHOUSE_RECEIPT_NOT_EXISTED));
-        PaymentSlip supplierDebt = PaymentSlip.builder()
-                .note(request.getNote())
-                .createdDate(ZonedDateTime.now())
-                .paid(request.getPaid())
-                .warehouseReceipt(warehouseReceipt)
-                .build();
-        if (request.getPaymentMethod() == "CASH") {
-            supplierDebt.setPaymentMethod(PaymentMethod.CASH);
-        } else if (request.getPaymentMethod() == "TRANSFER") {
-            supplierDebt.setPaymentMethod(PaymentMethod.TRANSFER);
+        PaymentReason paymentReason;
+        PaymentSlip paymentSlip = new PaymentSlip();
+
+        if (request.getPaymentReasonId() != null) {
+            paymentReason = paymentReasonRepository.findById(request.getPaymentReasonId()).orElseThrow(
+                    () -> new AppException(ErrorCode.PAYMENT_REASON_NOT_EXISTED)
+            );
+        } else {
+            paymentReason = paymentReasonRepository.findByName(request.getReason());
+            if (paymentReason == null) {
+                paymentReason = PaymentReason.builder()
+                        .name(request.getReason())
+                        .build();
+                paymentReasonRepository.save(paymentReason);
+            }
         }
-        return supplierDebtConverter.toResponse(
-                supplierDebtRepository.save(supplierDebt)
+        paymentSlip.setPaymentReason(paymentReason);
+        PayeeType payeeType = payeeTypeRepository.findById(request.getPayeeTypeId()).orElseThrow(
+                () -> new AppException(ErrorCode.PAYMENT_REASON_NOT_EXISTED)
         );
+        paymentSlip.setCreatedDate(ZonedDateTime.now());
+        paymentSlip.setNote(request.getNote());
+        paymentSlip.setPaid(request.getPaid());
+        if (request.getPaymentMethod().equals(PaymentMethod.TRANSFER.name())) {
+            paymentSlip.setPaymentMethod(PaymentMethod.TRANSFER);
+        } else {
+            paymentSlip.setPaymentMethod(PaymentMethod.CASH);
+        }
+        paymentSlip.setPayeeId(request.getPayeeId());
+        if (request.getPayeeId() == null) {
+            paymentSlip.setPayeeName(request.getPayeeName());
+        } else {
+            paymentSlip.setPayeeName(null);
+        }
+        paymentSlip.setPayeeType(payeeType);
+        paymentSlip.setDebt(request.isDebt());
+        if (request.isDebt() && request.getPayeeId() != null && payeeType.getName().equals(PayeeTypeEnum.SUPPLIER)) {
+            supplierService.updateDebt(request.getPaid(), request.getPayeeId());
+        }
+        paymentSlipRepository.save(paymentSlip);
+        return paymentSlipConverter.toResponse(paymentSlip);
+    }
+
+    @Override
+    public PageResponse<PaymentSlipResponse> search(PaymentSlipSearchRequest request, int page, int size) {
+        Specification<PaymentSlip> spec = Specification.where(
+                (root, query, criteriaBuilder) ->
+                        criteriaBuilder.conjunction()
+        );
+        if (!Objects.equals(request.getId(), null)) {
+            BaseSpecification<PaymentSlip> specId = new BaseSpecification<>(
+                    SearchCriteria.builder()
+                            .operation("=")
+                            .key("id")
+                            .value(request.getId())
+                            .build()
+            );
+            spec = spec.and(specId);
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<PaymentSlip> pageData = paymentSlipRepository.findAll(spec, pageable);
+        List<PaymentSlipResponse> paymentSlipResponses = pageData.stream().map(
+                paymentSlipConverter::toResponse
+        ).collect(Collectors.toList());
+        Comparator<PaymentSlipResponse> comparatorDes = (s1, s2) -> s2.getCreatedDate()
+                .compareTo(s1.getCreatedDate());
+        Collections.sort(paymentSlipResponses, comparatorDes);
+        return PageResponse.<PaymentSlipResponse>builder()
+                .data(
+                        paymentSlipResponses
+                )
+                .pageSize(pageData.getSize())
+                .totalPage(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .currentPage(page)
+                .build();
+    }
+
+    @Override
+    public List<PayeeTypeResponse> getAllPayeeType() {
+        List<PayeeType> payeeTypes = payeeTypeRepository.findAll();
+        if (!payeeTypes.isEmpty()) {
+            return payeeTypes.stream().map(
+                    it -> PayeeTypeResponse.builder()
+                            .name(it.getName().name())
+                            .id(it.getId())
+                            .build()
+            ).toList();
+        }
+        return List.of();
     }
 }

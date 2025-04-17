@@ -13,21 +13,18 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentSlipResponse {
+    private Long id;
     private Long paid;
-
-    private Long outstandingDebt;
-
-    private String type;
-
-    private Long typeCode;
 
     private ZonedDateTime createdDate;
 
     private String paymentMethod;
 
     private String note;
+    private String paymentReason;
+    private String payeeType;
 
-    private WarehouseReceiptResponse warehouseReceipt;
+    private String payeeName;
 }
 
 

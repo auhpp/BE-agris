@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.ZonedDateTime;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,13 +12,16 @@ import java.time.ZonedDateTime;
 public class PaymentSlipRequest {
     private Long paid;
 
-    private Long outstandingDebt;
-
-    private ZonedDateTime createdDate;
-
     private String paymentMethod;
 
     private String note;
 
-    private Long warehouseReceiptId;
+    private Long payeeId;
+
+    private String payeeName;
+    private Long paymentReasonId;
+    private String reason;
+    private boolean debt;
+    private Long payeeTypeId;
+
 }

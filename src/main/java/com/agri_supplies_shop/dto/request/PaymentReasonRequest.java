@@ -9,19 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SupplierRequest {
-
-    private Long id;
-
+public class PaymentReasonRequest {
     private String name;
-
-    private String email;
-
-    private String phoneNumber;
-
-    private String address;
-
-    private String status;
-
-    private String contactName;
 }

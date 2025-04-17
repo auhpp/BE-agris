@@ -12,9 +12,16 @@ import java.util.List;
 
 public interface ProductService {
     ProductResponse createAndUpdate(ProductRequest productRequest);
+
     void delete(List<Long> ids);
+
     PageResponse<ProductResponse> find(SearchProductRequest searchProductRequest, int page, int size);
+
     ProductResponse findById(Long id);
+
     List<ImageResponse> uploadImages(List<MultipartFile> files, Long id);
+
     ImageResponse uploadThumbnail(MultipartFile file, Long id) throws IOException;
+
+    Long getStock(Long productId);
 }

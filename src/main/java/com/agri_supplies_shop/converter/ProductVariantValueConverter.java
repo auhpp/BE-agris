@@ -78,7 +78,7 @@ public class ProductVariantValueConverter {
         ).toList();
         response.setVariantValues(variantResponses);
         //Stock
-        if (request.getShipments() != null) {
+        if (request.getShipments() != null && !request.getShipments().isEmpty()) {
             List<Shipment> shipments;
             if (request.getShipments().get(0).getExpiry() != null) {
                 shipments = request.getShipments().stream().filter(
@@ -96,7 +96,10 @@ public class ProductVariantValueConverter {
             Long stock = warehouseDetails.stream().reduce(
                     0L, (result, wd) -> result + wd.getStock(), Long::sum
             );
-            Long stockAvailable = stock - request.getReserved();
+            Long stockAvailable = 0L;
+            if (request.getReserved() != null) {
+                stockAvailable = stock - request.getReserved();
+            }
             response.setStock(stockAvailable);
         } else {
             response.setStock(0L);

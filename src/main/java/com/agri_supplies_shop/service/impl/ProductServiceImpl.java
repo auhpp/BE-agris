@@ -4,9 +4,7 @@ import com.agri_supplies_shop.converter.ProductConverter;
 import com.agri_supplies_shop.dto.request.ProductRequest;
 import com.agri_supplies_shop.dto.request.SearchProductRequest;
 import com.agri_supplies_shop.dto.response.*;
-import com.agri_supplies_shop.entity.Category;
-import com.agri_supplies_shop.entity.Product;
-import com.agri_supplies_shop.entity.ProductImage;
+import com.agri_supplies_shop.entity.*;
 import com.agri_supplies_shop.enums.Status;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
@@ -23,8 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -128,15 +127,25 @@ public class ProductServiceImpl implements ProductService {
         List<Object> results = productRepository.findProduct(searchProductRequest, page, size);
         Long totalElement = (Long) results.get(1);
         List<Product> products = (List<Product>) results.get(0);
+        List<ProductResponse> productResponses;
+        if (searchProductRequest.isSearchAllStock()) {
+            productResponses = products.stream().map(
+                    it -> productConverter.toResponse(it)
+            ).toList();
+        } else {
+            productResponses = products.stream().map(
+                    it -> productConverter.toResponse(it)
+            ).filter(
+                    pd -> getStock(pd.getId()) != 0L
+            ).toList();
+        }
         return PageResponse.<ProductResponse>builder()
                 .currentPage(page)
                 .pageSize(size)
                 .totalElements(totalElement)
                 .totalPage((int) (Math.ceil((double) totalElement / size)))
                 .data(
-                        products.stream().map(
-                                it -> productConverter.toResponse(it)
-                        ).toList()
+                        productResponses
                 )
                 .build();
     }
@@ -179,6 +188,51 @@ public class ProductServiceImpl implements ProductService {
         product.setThumbnail(pathUrl.getFilePath());
         productRepository.save(product);
         return pathUrl;
+    }
+
+    @Override
+    public Long getStock(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
+        );
+        //reserved
+        Long reserved = 0L;
+        if (product.getProductVariantValues() != null) {
+            for (ProductVariantValue pv : product.getProductVariantValues()) {
+                if (pv.getReserved() != null)
+                    reserved += pv.getReserved();
+            }
+//            reserved = product.getProductVariantValues().stream().reduce(
+//                    0L, (res, pv) -> res + pv.getReserved(),
+//                    Long::sum
+//            );
+        }
+        if (product.getProductVariantValues() != null) {
+            List<Shipment> shipmentNoExpiry = new ArrayList<>();
+            List<Shipment> shipmentHasExpiry = new ArrayList<>();
+            for (ProductVariantValue pv : product.getProductVariantValues()) {
+                if (!pv.getShipments().isEmpty() && pv.getShipments().get(0).getExpiry() != null) {
+                    shipmentHasExpiry.addAll(pv.getShipments().stream().filter(
+                            sm ->
+                                    Optional.ofNullable(sm).map(Shipment::getExpiry).filter(
+                                            expiry -> expiry.isAfter(LocalDate.now())
+                                    ).isPresent()
+                    ).toList());
+                } else {
+                    shipmentNoExpiry.addAll(pv.getShipments());
+                }
+            }
+            List<Shipment> shipments = Stream.of(shipmentNoExpiry, shipmentHasExpiry)
+                    .flatMap(Collection::stream).toList();
+            List<WarehouseDetail> warehouseDetails = shipments.stream().flatMap(
+                    it -> it.getWarehouseDetails().stream()
+            ).toList();
+            Long stock = warehouseDetails.stream().reduce(
+                    0L, (partialAgeResult, wd) -> partialAgeResult + wd.getStock(), Long::sum
+            );
+            return stock - reserved;
+        }
+        return 0L;
     }
 
 

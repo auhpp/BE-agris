@@ -17,4 +17,5 @@ public class SearchProductRequest {
     private String categoryName;
     private Integer priceFrom;
     private Integer priceTo;
+    private boolean searchAllStock;
 }

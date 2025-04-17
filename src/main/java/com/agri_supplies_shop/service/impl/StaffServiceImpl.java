@@ -24,6 +24,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,21 @@ public class StaffServiceImpl implements StaffService {
     StaffConverter staffConverter;
     RoleRepository roleRepository;
     AccountRepository accountRepository;
+
+    @Override
+    public StaffResponse getMyInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        Account account = accountRepository.findByUserName(userName).orElseThrow(
+                () -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED)
+        );
+        Staff staff = staffRepository.findByAccountId(account.getId()).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
+        return staffConverter.toResponse(
+                staff
+        );
+    }
 
     @Override
     public AccountResponse createStaffAccount(StaffRequest request) {

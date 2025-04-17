@@ -42,19 +42,19 @@ public class WarehouseReceiptConverter {
                     it -> receiptDetailConverter.toResponse(it)
             ).toList());
 
-        if (warehouseReceipt.getPaymentSlips() != null) {
-            List<PaymentSlip> paymentSlip = warehouseReceipt.getPaymentSlips();
-            Comparator<PaymentSlip> comparatorDesc = (prod1, prod2) -> prod2.getCreatedDate()
-                    .compareTo(prod1.getCreatedDate());
-            Collections.sort(paymentSlip, comparatorDesc);
-            int sumPaid = 0;
-            for (int i = 0; i < paymentSlip.size(); i++) {
-                sumPaid += paymentSlip.get(0).getPaid();
-            }
-            response.setOutstandingDebt(warehouseReceipt.getAmount() - sumPaid);
-        } else {
-            response.setOutstandingDebt(0L);
-        }
+//        if (warehouseReceipt.getPaymentSlips() != null) {
+//            List<PaymentSlip> paymentSlip = warehouseReceipt.getPaymentSlips();
+//            Comparator<PaymentSlip> comparatorDesc = (prod1, prod2) -> prod2.getCreatedDate()
+//                    .compareTo(prod1.getCreatedDate());
+//            Collections.sort(paymentSlip, comparatorDesc);
+//            int sumPaid = 0;
+//            for (int i = 0; i < paymentSlip.size(); i++) {
+//                sumPaid += paymentSlip.get(0).getPaid();
+//            }
+//            response.setOutstandingDebt(warehouseReceipt.getAmount() - sumPaid);
+//        } else {
+//            response.setOutstandingDebt(0L);
+//        }
         if (warehouseReceipt.getImportDate() != null) {
             response.setImportDate(warehouseReceipt.getImportDate());
         }

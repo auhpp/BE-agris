@@ -4,10 +4,7 @@ import com.agri_supplies_shop.converter.ReceiptDetailConverter;
 import com.agri_supplies_shop.dto.request.ReceiptDetailRequest;
 import com.agri_supplies_shop.dto.response.ReceiptDetailResponse;
 import com.agri_supplies_shop.dto.response.ShipmentResponse;
-import com.agri_supplies_shop.entity.ReceiptDetail;
-import com.agri_supplies_shop.entity.Shipment;
-import com.agri_supplies_shop.entity.ShipmentDetail;
-import com.agri_supplies_shop.entity.WarehouseReceipt;
+import com.agri_supplies_shop.entity.*;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.*;
@@ -39,6 +36,12 @@ public class ReceiptDetailServiceImpl implements ReceiptDetailService {
         WarehouseReceipt warehouseReceipt = warehouseReceiptRepository.findById(warehouseReceiptId).orElseThrow(
                 () -> new AppException(ErrorCode.WAREHOUSE_RECEIPT_NOT_EXISTED)
         );
+        ProductVariantValue variantValue = variantValueRepository.findById(request.getProductVariantId()).orElseThrow(
+                () -> new AppException(ErrorCode.PRODUCT_VARIANT_VALUE_NOT_FOUND)
+        );
+        variantValue.setCapitalPrice(request.getUnitPrice());
+        variantValue.setSellingPrice(request.getUnitPrice());
+        variantValueRepository.save(variantValue);
         ReceiptDetail receiptDetail = ReceiptDetail.builder()
                 .importPrice(request.getUnitPrice())
                 .warehouseReceipt(warehouseReceipt)
