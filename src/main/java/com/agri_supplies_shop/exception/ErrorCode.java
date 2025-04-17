@@ -27,12 +27,16 @@ public enum ErrorCode {
     WAREHOUSE_NOT_EXISTED(1018, "Warehouse not existed", HttpStatus.BAD_REQUEST),
     CALCULATION_NOT_EXISTED(1019, "Calculation not existed", HttpStatus.BAD_REQUEST),
     SHIPMENT_NOT_EXISTED(1020, "Shipment not existed", HttpStatus.BAD_REQUEST),
-    ACCOUNT_NOT_EXISTED(1020, "Account not existed", HttpStatus.BAD_REQUEST),
-    STAFF_NOT_EXISTED(1021, "Staff not existed", HttpStatus.BAD_REQUEST),
-    ORDER_NOT_EXISTED(1021, "Orders not existed", HttpStatus.BAD_REQUEST),
-    INSUFFICIENT_INVENTORY(1022, "Insufficient inventory not existed", HttpStatus.BAD_REQUEST),
-    CATEGORY_EXISTED(1023, "Category existed", HttpStatus.BAD_REQUEST),
-    CALCULATION_EXISTED(1019, "Calculation existed", HttpStatus.BAD_REQUEST);
+    ACCOUNT_NOT_EXISTED(1021, "Account not existed", HttpStatus.BAD_REQUEST),
+    STAFF_NOT_EXISTED(1022, "Staff not existed", HttpStatus.BAD_REQUEST),
+    ORDER_NOT_EXISTED(1023, "Orders not existed", HttpStatus.BAD_REQUEST),
+    INSUFFICIENT_INVENTORY(1024, "Insufficient inventory not existed", HttpStatus.BAD_REQUEST),
+    CATEGORY_EXISTED(1025, "Category existed", HttpStatus.BAD_REQUEST),
+    CALCULATION_EXISTED(1026, "Calculation existed", HttpStatus.BAD_REQUEST),
+    PAYMENT_REASON_NOT_EXISTED(1027, "Payment reason not existed", HttpStatus.BAD_REQUEST),
+    PAYEE_TYPE_NOT_EXISTED(1028, "Payee type reason not existed", HttpStatus.BAD_REQUEST),
+    PAYMENT_SLIP_NOT_VALID(1029, "Payment slip not valid", HttpStatus.BAD_REQUEST),
+    PAYMENT_REASON_EXISTED(1030, "Payment reason existed", HttpStatus.BAD_REQUEST);
 
 
     private final int code;

@@ -12,4 +12,11 @@ public class SupplierResponse {
     private String name;
     private String email;
     private String phoneNumber;
+    private Long debt;
+    private String address;
+
+    private String status;
+
+    private String contactName;
+    private Long amount;
 }

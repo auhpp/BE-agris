@@ -86,18 +86,25 @@ public class ProductConverter {
             response.setImages(imageResponses);
         }
         //reserved
-        Long reserved = product.getProductVariantValues().stream().reduce(
-                0L, (res, pv) -> res + pv.getReserved(),
-                Long::sum
-        );
-        response.setReserved(reserved);
+        Long reserved = 0L;
+        if (product.getProductVariantValues() != null) {
+            for (ProductVariantValue pv : product.getProductVariantValues()) {
+                if (pv.getReserved() != null)
+                    reserved += pv.getReserved();
+            }
+//            reserved = product.getProductVariantValues().stream().reduce(
+//                    0L, (res, pv) -> res + pv.getReserved(),
+//                    Long::sum
+//            );
+            response.setReserved(reserved);
+        }
 
         //stock
         if (product.getProductVariantValues() != null) {
             List<Shipment> shipmentNoExpiry = new ArrayList<>();
             List<Shipment> shipmentHasExpiry = new ArrayList<>();
             for (ProductVariantValue pv : product.getProductVariantValues()) {
-                if (pv.getShipments().get(0).getExpiry() != null) {
+                if (!pv.getShipments().isEmpty() && pv.getShipments().get(0).getExpiry() != null) {
                     shipmentHasExpiry.addAll(pv.getShipments().stream().filter(
                             sm ->
                                     Optional.ofNullable(sm).map(Shipment::getExpiry).filter(

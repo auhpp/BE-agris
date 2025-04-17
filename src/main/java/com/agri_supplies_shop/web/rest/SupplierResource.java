@@ -1,7 +1,9 @@
 package com.agri_supplies_shop.web.rest;
 
 import com.agri_supplies_shop.dto.request.SupplierRequest;
+import com.agri_supplies_shop.dto.request.SupplierSearchRequest;
 import com.agri_supplies_shop.dto.response.ApiResponse;
+import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.SupplierResponse;
 import com.agri_supplies_shop.service.SupplierService;
 import lombok.AccessLevel;
@@ -36,7 +38,7 @@ public class SupplierResource {
                 .build();
     }
 
-    @GetMapping("/search")
+    @GetMapping("/find")
     public ApiResponse<List<SupplierResponse>> find(@RequestParam(name = "name") String name,
                                                     @RequestParam(name = "phoneNumber") String phoneNumber
     ) {
@@ -46,8 +48,24 @@ public class SupplierResource {
                 .build();
     }
 
-    @DeleteMapping("/{ids}")
-    public void getAll(@PathVariable("ids") List<Long> ids) {
-        supplierService.delete(ids);
+    @DeleteMapping("/{id}")
+    public ApiResponse delete(@PathVariable("id") Long id) {
+        supplierService.delete(id);
+        return ApiResponse.builder()
+                .code(200)
+                .build();
     }
+
+    @GetMapping("/search")
+    public ApiResponse search(SupplierSearchRequest request,
+                              @RequestParam(name = "size", required = false,
+                                      defaultValue = "10") int size,
+                              @RequestParam(name = "page", required = false,
+                                      defaultValue = "1") int page) {
+        return ApiResponse.<PageResponse<SupplierResponse>>builder()
+                .code(200)
+                .result(supplierService.search(request, page, size))
+                .build();
+    }
+
 }

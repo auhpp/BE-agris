@@ -39,14 +39,16 @@ public class ShipmentConverter {
             response.setQuantity(0L);
         }
         //warehouse
-        List<WarehouseDetailResponse> warehouseDetails = shipment.getWarehouseDetails().stream().map(
-                wd -> WarehouseDetailResponse.builder()
-                        .warehouseDetailId(wd.getId())
-                        .warehouseName(wd.getWarehouse().getName())
-                        .stock(wd.getStock())
-                        .build()
-        ).toList();
-        response.setWarehouseDetail(warehouseDetails);
+        if (shipment.getShipmentDetails() != null) {
+            List<WarehouseDetailResponse> warehouseDetails = shipment.getWarehouseDetails().stream().map(
+                    wd -> WarehouseDetailResponse.builder()
+                            .warehouseDetailId(wd.getId())
+                            .warehouseName(wd.getWarehouse().getName())
+                            .stock(wd.getStock())
+                            .build()
+            ).toList();
+            response.setWarehouseDetail(warehouseDetails);
+        }
         return response;
     }
 

@@ -7,6 +7,7 @@ import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.StaffResponse;
 
 public interface StaffService {
+    StaffResponse getMyInfo();
 
     AccountResponse createStaffAccount(StaffRequest request);
 
