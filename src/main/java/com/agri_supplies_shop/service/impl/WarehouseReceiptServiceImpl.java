@@ -8,6 +8,7 @@ import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.ReceiptDetailResponse;
 import com.agri_supplies_shop.dto.response.WarehouseReceiptResponse;
 import com.agri_supplies_shop.entity.PayeeType;
+import com.agri_supplies_shop.entity.ReceiptDetail;
 import com.agri_supplies_shop.entity.Supplier;
 import com.agri_supplies_shop.entity.WarehouseReceipt;
 import com.agri_supplies_shop.enums.ImportGoodsStatus;
@@ -65,7 +66,6 @@ public class WarehouseReceiptServiceImpl implements WarehouseReceiptService {
         //Warehouse
         WarehouseReceipt warehouseReceipt = WarehouseReceipt.builder()
                 .createdDate(ZonedDateTime.now())
-                .amount(request.getAmount())
                 .note(request.getNote())
                 .supplier(supplier)
                 .warehouse(warehouseRepository.findById(request.getWarehouseId()).orElseThrow(
@@ -75,6 +75,8 @@ public class WarehouseReceiptServiceImpl implements WarehouseReceiptService {
                 .staff(staffRepository.findById(request.getStaffId()).orElseThrow(
                         () -> new AppException(ErrorCode.STAFF_NOT_EXISTED)
                 ))
+                .paid(request.getPaid())
+                .amount(request.getAmount())
                 .build();
 
         warehouseReceiptRepository.save(warehouseReceipt);
@@ -85,18 +87,19 @@ public class WarehouseReceiptServiceImpl implements WarehouseReceiptService {
 
 
         //Payment slip
-        supplier.setDebt(supplier.getDebt() + request.getAmount());
-        if (!Objects.equals(request.getAmount(), request.getMoneyForSupplier())) {
+        Long amount = request.getAmount();
+        supplier.setDebt(supplier.getDebt() + amount);
+        if (!Objects.equals(amount, request.getPaid())) {
             warehouseReceipt.setPaymentStatus(PaymentStatus.NO_PAYMENT);
         } else {
             warehouseReceipt.setPaymentStatus(PaymentStatus.PAID);
         }
         warehouseReceiptRepository.save(warehouseReceipt);
-        if (request.getMoneyForSupplier() != 0) {
+        if (request.getPaid() != 0) {
             PayeeType payeeType = payeeTypeRepository.findByName(PayeeTypeEnum.SUPPLIER);
             paymentSlipService.create(
                     PaymentSlipRequest.builder()
-                            .paid(request.getMoneyForSupplier())
+                            .paid(request.getPaid())
                             .debt(true)
                             .payeeId(supplier.getId())
                             .payeeTypeId(payeeType.getId())
@@ -143,4 +146,6 @@ public class WarehouseReceiptServiceImpl implements WarehouseReceiptService {
                 ).toList())
                 .build();
     }
+
+
 }

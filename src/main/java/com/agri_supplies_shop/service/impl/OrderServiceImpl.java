@@ -7,6 +7,7 @@ import com.agri_supplies_shop.dto.response.PageResponse;
 import com.agri_supplies_shop.dto.response.UpdateStockResponse;
 import com.agri_supplies_shop.entity.*;
 import com.agri_supplies_shop.enums.OrderStatus;
+import com.agri_supplies_shop.enums.PaymentMethod;
 import com.agri_supplies_shop.enums.PaymentStatus;
 import com.agri_supplies_shop.enums.PredefinedRole;
 import com.agri_supplies_shop.exception.AppException;
@@ -15,6 +16,7 @@ import com.agri_supplies_shop.repository.*;
 import com.agri_supplies_shop.repository.specification.BaseSpecification;
 import com.agri_supplies_shop.repository.specification.SearchCriteria;
 import com.agri_supplies_shop.service.OrderService;
+import com.agri_supplies_shop.service.ProductVariantValueService;
 import com.agri_supplies_shop.service.WarehouseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
     ProductVariantValueRepository variantValueRepository;
     OrderWarehouseRepository orderWarehouseRepository;
     AccountRepository accountRepository;
+    ProductVariantValueService variantValueService;
 
     @Override
     @Transactional
@@ -53,6 +56,14 @@ public class OrderServiceImpl implements OrderService {
         orders.setOrderStatus(OrderStatus.WAIT_FOR_CONFIRMATION);
         orders.setPaymentStatus(PaymentStatus.NO_PAYMENT);
         orders.setCreatedAt(ZonedDateTime.now());
+        if (Objects.equals(request.getPaymentMethod(), PaymentMethod.CASH.name())) {
+            orders.setPaymentMethod(PaymentMethod.CASH);
+        } else if (Objects.equals(request.getPaymentMethod(), PaymentMethod.VNPAY.name())) {
+            orders.setPaymentMethod(PaymentMethod.VNPAY);
+        }
+        if (request.getVnpTxnRef() != null && !request.getVnpTxnRef().isEmpty()) {
+            orders.setVnpTxnRef(request.getVnpTxnRef());
+        }
         orders.setCustomer(customerRepository.findById(request.getCustomerId()).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         ));
@@ -61,7 +72,16 @@ public class OrderServiceImpl implements OrderService {
             productVariantValue = variantValueRepository.findById(od.getProductVariantId()).orElseThrow(
                     () -> new AppException(ErrorCode.PRODUCT_VARIANT_VALUE_NOT_FOUND)
             );
-            productVariantValue.setReserved(productVariantValue.getReserved() + od.getQuantity());
+            Long stockAvailable = variantValueService.getStock(productVariantValue.getId());
+            if (stockAvailable < od.getQuantity()) {
+                throw new AppException(ErrorCode.INVALID_CART_QUANTITY);
+            }
+            if (productVariantValue.getReserved() != null)
+                productVariantValue.setReserved(productVariantValue.getReserved() + od.getQuantity());
+            else {
+                productVariantValue.setReserved(od.getQuantity());
+
+            }
             variantValueRepository.save(productVariantValue);
         }
         orderRepository.save(orders);
@@ -85,6 +105,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PageResponse<OrderResponse> search(OrderSearchRequest request, int page, int size) {
         Specification<Orders> spec = Specification.where(null);
+        if (request.getCustomerId() != null) {
+            BaseSpecification<Orders> specCustomerId = new BaseSpecification(
+                    SearchCriteria.builder()
+                            .key("id")
+                            .nameObject("customer")
+                            .value(request.getCustomerId())
+                            .operation("=")
+                            .build()
+            );
+            spec = spec.and(specCustomerId);
+        }
         if (request.getId() != null) {
             BaseSpecification<Orders> specId = new BaseSpecification(
                     SearchCriteria.builder()
@@ -209,4 +240,26 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(orders);
         return null;
     }
+
+    @Override
+    public OrderResponse updatePaymentStatus(String status, String vnpTxnRef) {
+        Orders orders = orderRepository.findByVnpTxnRef(vnpTxnRef).orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_EXISTED)
+        );
+        if (Objects.equals(status, PaymentStatus.PAID.name())) {
+            orders.setPaymentStatus(PaymentStatus.PAID);
+        } else {
+            orders.setPaymentStatus(PaymentStatus.NO_PAYMENT);
+        }
+        orderRepository.save(orders);
+        return orderConverter.toResponse(orders);
+    }
+
+//    @Override
+//    public void deleteOrder(String vnpTxnRef) {
+//        Orders orders = orderRepository.findByVnpTxnRef(vnpTxnRef).orElseThrow(
+//                () -> new AppException(ErrorCode.ORDER_NOT_EXISTED)
+//        );
+//        orderRepository.delete(orders);
+//    }
 }

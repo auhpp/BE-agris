@@ -28,7 +28,7 @@ public class WarehouseReceiptResponse {
 
     private ZonedDateTime importDate;
 
-    private Long outstandingDebt;
+    private Long paid;
 
     private StaffResponse staff;
     private String importStatus;

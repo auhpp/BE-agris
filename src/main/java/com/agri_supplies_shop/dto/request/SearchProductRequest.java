@@ -18,4 +18,5 @@ public class SearchProductRequest {
     private Integer priceFrom;
     private Integer priceTo;
     private boolean searchAllStock;
+    private String status;
 }

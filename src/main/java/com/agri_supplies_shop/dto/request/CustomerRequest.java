@@ -26,6 +26,8 @@ public class CustomerRequest {
 
     private String email;
 
+    private String status;
+
     private Gender gender;
 
     private Date dateOfBirth;

@@ -23,5 +23,6 @@ public class ProductVariantValueResponse {
     private String thumbnail;
     private Long productId;
     private Long reserved;
+    private String status;
 
 }

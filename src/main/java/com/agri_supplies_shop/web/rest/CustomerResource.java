@@ -2,7 +2,7 @@ package com.agri_supplies_shop.web.rest;
 
 import com.agri_supplies_shop.dto.request.AddressRequest;
 import com.agri_supplies_shop.dto.request.CustomerRequest;
-import com.agri_supplies_shop.dto.request.PasswordRequest;
+import com.agri_supplies_shop.dto.request.CustomerSearchRequest;
 import com.agri_supplies_shop.dto.response.*;
 import com.agri_supplies_shop.service.CustomerService;
 import com.agri_supplies_shop.service.ImageService;
@@ -40,13 +40,15 @@ public class CustomerResource {
                 .build();
     }
 
-    @GetMapping
-    public ApiResponse<PageResponse<CustomerResponse>> getAllCustomer(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                                      @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    @GetMapping("/search")
+    public ApiResponse<PageResponse<CustomerResponse>> search(
+            CustomerSearchRequest request,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
         return ApiResponse.<PageResponse<CustomerResponse>>builder()
                 .code(200)
-                .result(customerService.getAllCustomer(page, size))
+                .result(customerService.search(request, page, size))
                 .build();
     }
 
@@ -89,4 +91,7 @@ public class CustomerResource {
                 )
                 .build();
     }
+
+
+
 }

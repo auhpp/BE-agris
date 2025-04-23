@@ -8,10 +8,10 @@ import com.agri_supplies_shop.dto.response.AuthenticationResponse;
 import com.agri_supplies_shop.dto.response.IntrospectResponse;
 import com.agri_supplies_shop.entity.Account;
 import com.agri_supplies_shop.entity.InvalidatedToken;
+import com.agri_supplies_shop.enums.Status;
 import com.agri_supplies_shop.exception.AppException;
 import com.agri_supplies_shop.exception.ErrorCode;
 import com.agri_supplies_shop.repository.AccountRepository;
-import com.agri_supplies_shop.repository.CustomerRepository;
 import com.agri_supplies_shop.repository.InvalidatedTokenRepository;
 import com.agri_supplies_shop.service.AuthenticationService;
 import com.nimbusds.jose.*;
@@ -60,16 +60,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Account account = accountRepository.findByUserName(request.getUserName()).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
-        AuthenticationResponse response = new AuthenticationResponse();
-        boolean valid = passwordEncoder.matches(request.getPassword(), account.getPassword());
-        if (valid) {
-            String token = generateToken(account);
-            response.setToken(token);
-        } else {
-            throw new AppException(ErrorCode.WRONG_PASSWORD);
-        }
-        response.setAuthenticated(true);
-        return response;
+        if (account.getStatus() != Status.INACTIVE) {
+            AuthenticationResponse response = new AuthenticationResponse();
+            boolean valid = passwordEncoder.matches(request.getPassword(), account.getPassword());
+            if (valid) {
+                String token = generateToken(account);
+                response.setToken(token);
+            } else {
+                throw new AppException(ErrorCode.WRONG_PASSWORD);
+            }
+            response.setAuthenticated(true);
+            return response;
+        } else throw new AppException(ErrorCode.ACCOUNT_NOT_ACTIVE);
     }
 
     @Override
@@ -145,7 +147,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return signedJWT;
     }
 
-    private String generateToken(Account account) throws JOSEException {
+    @Override
+    public String generateToken(Account account) throws JOSEException {
         //Header
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         //Create claims

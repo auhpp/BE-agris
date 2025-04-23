@@ -15,4 +15,7 @@ public interface OrderService {
     OrderResponse confirmOrder(ConfirmOrderRequest request);
 
     OrderResponse cancelOrder(CancelOrderRequest request);
+
+    //    void deleteOrder(String vnpTxnRef);
+    OrderResponse updatePaymentStatus(String status, String vnpTxnRef);
 }

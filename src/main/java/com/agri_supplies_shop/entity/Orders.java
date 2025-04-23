@@ -40,6 +40,7 @@ public class Orders {
     @LastModifiedDate
     private ZonedDateTime updatedAt;
 
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     private String fullName;
@@ -57,6 +58,9 @@ public class Orders {
     private String reasonForCancellation;
 
     private String canceller;
+
+    private String vnpTxnRef;
+
 
     //Relationship
     //Customer

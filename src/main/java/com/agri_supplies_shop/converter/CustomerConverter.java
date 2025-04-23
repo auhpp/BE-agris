@@ -32,9 +32,11 @@ public class CustomerConverter {
         CustomerResponse response = modelMapper.map(customer, CustomerResponse.class);
         response.setUserName(customer.getAccount().getUserName());
         response.setPassword(customer.getAccount().getPassword());
+        response.setEmail(customer.getEmail());
+        response.setStatus(customer.getStatus().name());
         if (customer.getAddresses() != null) {
             List<AddressResponse> addressResponses = customer.getAddresses().stream().map(
-                    it -> addressConverter.toResponse(it)
+                    addressConverter::toResponse
             ).toList();
             response.setAddresses(addressResponses);
         }

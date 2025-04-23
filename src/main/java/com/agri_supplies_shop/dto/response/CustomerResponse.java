@@ -33,4 +33,6 @@ public class CustomerResponse {
     private Date dateOfBirth;
 
     private List<AddressResponse> addresses;
+    private String status;
+
 }

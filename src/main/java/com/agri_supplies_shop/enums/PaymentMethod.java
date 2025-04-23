@@ -1,7 +1,7 @@
 package com.agri_supplies_shop.enums;
 
 public enum PaymentMethod {
-    TRANSFER("Chuyển khoản"), CASH("Tiền mặt");
+    TRANSFER("Chuyển khoản"), CASH("Tiền mặt"), VNPAY("VNPay");
     private final String name;
 
     PaymentMethod(String name) {

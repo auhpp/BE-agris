@@ -1,5 +1,6 @@
 package com.agri_supplies_shop.entity;
 
+import com.agri_supplies_shop.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,9 @@ public class Account {
     private String userName;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     private ZonedDateTime createdAt;
     //Relationship

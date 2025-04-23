@@ -5,13 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentSlipSearchRequest {
     private Long id;
-//    private LocalDate
+    private Long payeeTypeId;
+    private Long paymentReasonId;
+    private Long payeeId;
 }

@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PasswordRequest {
-    String email;
-    String oldPassword;
-    String newPassword;
+public class OtpValidateRequest {
+    private String key;
+    private Integer otp;
 }

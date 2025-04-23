@@ -56,4 +56,22 @@ public class OrderResource {
                 .result(orderService.cancelOrder(request))
                 .build();
     }
+
+//    @DeleteMapping("/delete/{vnpTxnRef}")
+//    public ApiResponse deleteOrder(@PathVariable(name = "vnpTxnRef") String vnpTxnRef){
+//        return ApiResponse.builder()
+//                .code(200)
+//                .build();
+//    }
+
+
+    @GetMapping("/update/payment")
+    public ApiResponse updatePaymentStatus(@RequestParam("status") String status,
+                                           @RequestParam("vnpTxnRef") String vnpTxnRef
+    ) {
+        return ApiResponse.<OrderResponse>builder()
+                .code(200)
+                .result(orderService.updatePaymentStatus(status, vnpTxnRef))
+                .build();
+    }
 }

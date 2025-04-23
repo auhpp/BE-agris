@@ -19,11 +19,11 @@ public class WarehouseReceiptRequest {
 
     private Long staffId;
 
-    private Long amount;
+    private Long paid;
 
     private String note;
 
-    private Long moneyForSupplier;
+    private Long amount;
 
     List<ReceiptDetailRequest> receiptDetails;
 

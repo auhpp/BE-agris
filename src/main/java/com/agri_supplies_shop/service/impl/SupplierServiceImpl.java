@@ -93,7 +93,7 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public List<SupplierResponse> getAll() {
         return supplierRepository.findAll().stream().map(
-                it -> supplierConverter.toResponse(it)
+                supplierConverter::toResponse
         ).toList();
     }
 
@@ -103,8 +103,8 @@ public class SupplierServiceImpl implements SupplierService {
             return List.of(supplierConverter.toResponse(supplierRepository.findByPhoneNumber(phoneNumber)));
         }
         if (Objects.equals(phoneNumber, "")) {
-            return supplierRepository.findByNameContaining(name).stream().map(
-                    it -> supplierConverter.toResponse(it)
+            return supplierRepository.findByNameContainingAndStatus(name, Status.ACTIVE).stream().map(
+                    supplierConverter::toResponse
             ).toList();
         }
         return List.of();

@@ -99,7 +99,7 @@ public class ProductVariantValueConverter {
             Long stockAvailable = 0L;
             if (request.getReserved() != null) {
                 stockAvailable = stock - request.getReserved();
-            }
+            } else stockAvailable = stock;
             response.setStock(stockAvailable);
         } else {
             response.setStock(0L);
@@ -110,7 +110,7 @@ public class ProductVariantValueConverter {
         response.setName(request.getProduct().getName());
         //product
         response.setProductId(request.getProduct().getId());
-
+        response.setStatus(request.getProduct().getStatus().name());
         return response;
     }
 }

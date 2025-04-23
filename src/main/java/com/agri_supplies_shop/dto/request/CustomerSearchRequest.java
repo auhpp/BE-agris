@@ -7,10 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class PasswordRequest {
-    String email;
-    String oldPassword;
-    String newPassword;
+@NoArgsConstructor
+public class CustomerSearchRequest {
+    private Long id;
+    private String fullName;
+    private String email;
+    private String phoneNumber;
+    private String status;
 }

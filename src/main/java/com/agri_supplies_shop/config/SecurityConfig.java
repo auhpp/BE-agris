@@ -16,19 +16,19 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_POST_ENDPOINTS = {
             "/customer", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh",
-             "/staff/account"
+            "/email/otp/**", "/account/password/forget"
     };
     private final String[] PUBLIC_GET_ENDPOINTS = {
-            "/product/search", "/category", "/image/**", "/product/get/**"
+            "/product/search", "/category", "/image/**", "/product/get/**", "/payments/IPN"
     };
     private final String[] PRIVATE_POST_ENDPOINTS = {
-            "/product", "/category"
+            "/product", "/category", "/staff/account"
     };
     private final String[] PRIVATE_GET_ENDPOINTS = {
             "/supplier", "/customer", "/role"
     };
     private final String[] PRIVATE_DELETE_ENDPOINTS = {
-            "/product/**", "/customer", "/category", "/supplier"
+            "/product/**", "/customer", "/category", "/supplier", "/staff/recall"
     };
     @Autowired
     private CustomJwtDecoder jwtDecoder;
@@ -56,9 +56,6 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
     }
-
-
-
 
 
 }
