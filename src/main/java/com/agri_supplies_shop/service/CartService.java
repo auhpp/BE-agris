@@ -8,4 +8,5 @@ public interface CartService {
     CartItemResponse addToCart(CartItemRequest request);
     PageResponse<CartItemResponse> getAll(int page, int size);
     void delete(Long cartItemId);
+    CartItemResponse findById(Long cartId);
 }

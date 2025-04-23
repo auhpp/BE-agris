@@ -13,4 +13,5 @@ public class OrderSearchRequest {
     private String orderStatus;
     private String paymentStatus;
     private Long id;
+    private Long customerId;
 }

@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class AccountResponse {
     private String userName;
     private String password;
+    private String role;
 }

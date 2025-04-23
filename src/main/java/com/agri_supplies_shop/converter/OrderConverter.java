@@ -64,6 +64,7 @@ public class OrderConverter {
         response.setFullName(orders.getFullName());
         response.setPhoneNumber(orders.getPhoneNumber());
         response.setCustomer(customerConverter.toResponse(orders.getCustomer()));
+        response.setVnpTxnRef(orders.getVnpTxnRef());
         List<OrderDetailResponse> orderDetails = orders.getOrderDetails().stream().map(
                 od -> OrderDetailResponse.builder()
                         .productVariantValue(

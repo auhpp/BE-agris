@@ -26,7 +26,6 @@ public class Customer {
     private String avatar;
 
     private String phoneNumber;
-
     private String email;
 
     @Enumerated(EnumType.STRING)

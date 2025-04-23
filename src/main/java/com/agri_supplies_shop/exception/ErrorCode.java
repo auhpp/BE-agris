@@ -36,7 +36,13 @@ public enum ErrorCode {
     PAYMENT_REASON_NOT_EXISTED(1027, "Payment reason not existed", HttpStatus.BAD_REQUEST),
     PAYEE_TYPE_NOT_EXISTED(1028, "Payee type reason not existed", HttpStatus.BAD_REQUEST),
     PAYMENT_SLIP_NOT_VALID(1029, "Payment slip not valid", HttpStatus.BAD_REQUEST),
-    PAYMENT_REASON_EXISTED(1030, "Payment reason existed", HttpStatus.BAD_REQUEST);
+    PAYMENT_REASON_EXISTED(1030, "Payment reason existed", HttpStatus.BAD_REQUEST),
+    INVALID_EMAIL(1031, "Invalid email", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD(1032, "Invalid password", HttpStatus.BAD_REQUEST),
+    INVALID_CART_QUANTITY(1033, "Invalid cart quantity", HttpStatus.BAD_REQUEST),
+    CUSTOMER_NOT_EXISTED(1034, "Customer not existed", HttpStatus.BAD_REQUEST),
+    ACCOUNT_NOT_ACTIVE(1035, "Account not active", HttpStatus.BAD_REQUEST),
+    STAFF_EXISTED(1036, "Staff existed", HttpStatus.BAD_REQUEST);
 
 
     private final int code;

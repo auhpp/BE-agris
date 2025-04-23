@@ -29,6 +29,7 @@ public class StaffConverter {
             response.setUserName(staff.getAccount().getUserName());
             response.setPassword(staff.getAccount().getPassword());
         }
+        response.setEmail(staff.getEmail());
         response.setStatus(staff.getStatus().name());
         return response;
     }

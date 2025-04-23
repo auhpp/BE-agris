@@ -23,6 +23,15 @@ jwt:
   refreshable-duration: 36000 # in second
 file:
   upload-dir: D:\\university\\NLCS\\project\\images
+vnpay:
+  vnp_TmnCode: ${VNP_TMN_CODE}
+  vnp_HashSecret: ${VNP_HASH_SECRET}
+  vnp_ReturnUrl: http://localhost:3000/payments/payment_callback
+  vnp_PayUrl: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  vnp_ApiUrl: https://sandbox.vnpayment.vn/merchant_webapi/api/transaction
+
+
+
 
 
 

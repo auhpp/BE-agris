@@ -11,9 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StaffSearchRequest {
+    private Long id;
     private String fullName;
 
     private String phoneNumber;
 
     private String email;
+
+    private String status;
+
 }

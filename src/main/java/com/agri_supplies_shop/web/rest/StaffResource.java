@@ -3,17 +3,15 @@ package com.agri_supplies_shop.web.rest;
 
 import com.agri_supplies_shop.dto.request.StaffRequest;
 import com.agri_supplies_shop.dto.request.StaffSearchRequest;
-import com.agri_supplies_shop.dto.response.AccountResponse;
-import com.agri_supplies_shop.dto.response.ApiResponse;
-import com.agri_supplies_shop.dto.response.PageResponse;
-import com.agri_supplies_shop.dto.response.StaffResponse;
+import com.agri_supplies_shop.dto.response.*;
 import com.agri_supplies_shop.service.StaffService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/staff")
@@ -31,17 +29,14 @@ public class StaffResource {
     }
 
     @GetMapping("/search")
-    public ApiResponse search(@RequestParam Map<String, String> request,
+    public ApiResponse search(StaffSearchRequest request,
                               @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                               @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
-        StaffSearchRequest staffRequest = new StaffSearchRequest();
-        staffRequest.setFullName(request.get("fullName"));
-        staffRequest.setPhoneNumber(request.get("phoneNumber"));
-        staffRequest.setEmail(request.get("email"));
+
         return ApiResponse.<PageResponse<StaffResponse>>builder()
                 .code(200)
-                .result(staffService.search(staffRequest, page, size))
+                .result(staffService.search(request, page, size))
                 .build();
     }
 
@@ -50,6 +45,39 @@ public class StaffResource {
         return ApiResponse.<StaffResponse>builder()
                 .code(200)
                 .result(staffService.getMyInfo())
+                .build();
+    }
+
+    @PostMapping("/{id}")
+    public ApiResponse<StaffResponse> updateStaff(@PathVariable("id") Long id, @RequestBody StaffRequest request) {
+        return ApiResponse.<StaffResponse>builder()
+                .code(200)
+                .result(staffService.updateStaff(id, request))
+                .build();
+    }
+
+    @PostMapping("/avatar")
+    public ApiResponse<ImageResponse> uploadAvatar(
+            @RequestParam(value = "staffId", required = false) Long staffId,
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar
+    ) throws IOException {
+        return ApiResponse.<ImageResponse>builder()
+                .code(200)
+                .result(
+                        staffService.uploadAvatar(avatar, staffId)
+                )
+                .build();
+    }
+
+    @DeleteMapping("/recall")
+    public ApiResponse<Boolean> uploadAvatar(
+            @RequestParam(value = "staffId", required = false) Long staffId
+    ) throws IOException {
+        return ApiResponse.<Boolean>builder()
+                .code(200)
+                .result(
+                        staffService.recallStaff(staffId)
+                )
                 .build();
     }
 }

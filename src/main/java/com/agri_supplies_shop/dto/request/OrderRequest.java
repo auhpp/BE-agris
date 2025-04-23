@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
@@ -33,4 +34,10 @@ public class OrderRequest {
     private Long customerId;
 
     List<OrderDetailRequest> orderDetails;
+
+    private String vnpTxnRef;
+
+    private ZonedDateTime createdAt;
+
+    private String paymentStatus;
 }

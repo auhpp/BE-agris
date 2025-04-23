@@ -50,5 +50,6 @@ public class OrderResponse {
     private String reasonForCancellation;
 
     private String canceller;
+    private String vnpTxnRef;
 
 }

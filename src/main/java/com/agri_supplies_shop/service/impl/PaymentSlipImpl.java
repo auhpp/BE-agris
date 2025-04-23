@@ -110,7 +110,38 @@ public class PaymentSlipImpl implements PaymentSlipService {
             );
             spec = spec.and(specId);
         }
-
+        if (!Objects.equals(request.getPaymentReasonId(), null)) {
+            BaseSpecification<PaymentSlip> specPaymentReasonId = new BaseSpecification<>(
+                    SearchCriteria.builder()
+                            .operation("=")
+                            .key("id")
+                            .nameObject("paymentReason")
+                            .value(request.getPaymentReasonId())
+                            .build()
+            );
+            spec = spec.and(specPaymentReasonId);
+        }
+        if (!Objects.equals(request.getPayeeTypeId(), null)) {
+            BaseSpecification<PaymentSlip> specPayeeId = new BaseSpecification<>(
+                    SearchCriteria.builder()
+                            .operation("=")
+                            .key("id")
+                            .nameObject("payeeType")
+                            .value(request.getPayeeTypeId())
+                            .build()
+            );
+            spec = spec.and(specPayeeId);
+        }
+        if (!Objects.equals(request.getPayeeId(), null)) {
+            BaseSpecification<PaymentSlip> specPayeeId = new BaseSpecification<>(
+                    SearchCriteria.builder()
+                            .operation("=")
+                            .key("payeeId")
+                            .value(request.getPayeeId())
+                            .build()
+            );
+            spec = spec.and(specPayeeId);
+        }
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<PaymentSlip> pageData = paymentSlipRepository.findAll(spec, pageable);
         List<PaymentSlipResponse> paymentSlipResponses = pageData.stream().map(

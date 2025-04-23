@@ -1,6 +1,7 @@
 package com.agri_supplies_shop.service;
 
 import com.agri_supplies_shop.dto.request.AddressRequest;
+import com.agri_supplies_shop.dto.request.CustomerSearchRequest;
 import com.agri_supplies_shop.dto.request.PasswordRequest;
 import com.agri_supplies_shop.dto.request.CustomerRequest;
 import com.agri_supplies_shop.dto.response.AddressResponse;
@@ -16,7 +17,7 @@ public interface CustomerService {
     CustomerResponse createCustomer(CustomerRequest request);
     CustomerResponse updateCustomer(Long id, CustomerRequest request);
     CustomerResponse getMyInfo();
-    PageResponse<CustomerResponse> getAllCustomer(int page, int size);
+    PageResponse<CustomerResponse> search(CustomerSearchRequest request, int page, int size);
     void deleteUser(List<Long> ids);
     AddressResponse createAndUpdateAddress(AddressRequest request);
     void deleteAddress(Long addressId);

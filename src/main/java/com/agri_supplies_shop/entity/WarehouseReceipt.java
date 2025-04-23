@@ -24,8 +24,8 @@ public class WarehouseReceipt {
 
     private ZonedDateTime importDate;
 
+    private Long paid;
     private Long amount;
-
     private String note;
 
     @Enumerated(EnumType.STRING)

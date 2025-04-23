@@ -130,11 +130,11 @@ public class ProductServiceImpl implements ProductService {
         List<ProductResponse> productResponses;
         if (searchProductRequest.isSearchAllStock()) {
             productResponses = products.stream().map(
-                    it -> productConverter.toResponse(it)
+                    productConverter::toResponse
             ).toList();
         } else {
             productResponses = products.stream().map(
-                    it -> productConverter.toResponse(it)
+                    productConverter::toResponse
             ).filter(
                     pd -> getStock(pd.getId()) != 0L
             ).toList();
@@ -152,7 +152,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse findById(Long id) {
-        return productConverter.toResponse(productRepository.findById(id).orElseThrow(
+        return productConverter.toResponse(productRepository.findByIdAndStatus(id, Status.ACTIVE).orElseThrow(
                 () -> new AppException(ErrorCode.PRODUCT_NOT_FOUND)
         ));
     }

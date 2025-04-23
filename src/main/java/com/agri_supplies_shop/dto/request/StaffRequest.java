@@ -31,4 +31,6 @@ public class StaffRequest {
 
     private Date dateOfBirth;
 
+    private String status;
+
 }

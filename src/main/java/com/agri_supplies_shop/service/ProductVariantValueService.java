@@ -12,4 +12,6 @@ public interface ProductVariantValueService {
 
     //    ImageResponse uploadThumbnail(MultipartFile file, Long id) throws IOException;
     List<ProductVariantValueResponse> search(String name);
+
+    Long getStock(Long pVariantId);
 }

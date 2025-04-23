@@ -1,17 +1,12 @@
 package com.agri_supplies_shop.converter;
 
 import com.agri_supplies_shop.dto.response.WarehouseReceiptResponse;
-import com.agri_supplies_shop.entity.PaymentSlip;
 import com.agri_supplies_shop.entity.WarehouseReceipt;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -26,6 +21,7 @@ public class WarehouseReceiptConverter {
         WarehouseReceiptResponse response = WarehouseReceiptResponse.builder()
                 .id(warehouseReceipt.getId())
                 .amount(warehouseReceipt.getAmount())
+                .paid(warehouseReceipt.getPaid())
                 .note(warehouseReceipt.getNote())
                 .createdDate(warehouseReceipt.getCreatedDate())
                 .build();
@@ -39,7 +35,7 @@ public class WarehouseReceiptConverter {
 
         if (warehouseReceipt.getReceiptDetails() != null)
             response.setReceiptDetails(warehouseReceipt.getReceiptDetails().stream().map(
-                    it -> receiptDetailConverter.toResponse(it)
+                    receiptDetailConverter::toResponse
             ).toList());
 
 //        if (warehouseReceipt.getPaymentSlips() != null) {

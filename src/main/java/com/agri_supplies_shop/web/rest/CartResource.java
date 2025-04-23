@@ -39,4 +39,14 @@ public class CartResource {
     public void delete(@PathVariable("id") Long id) {
         cartService.delete(id);
     }
+
+    @GetMapping("/{id}")
+    public ApiResponse<CartItemResponse> findById(
+            @PathVariable("id") Long id
+    ) {
+        return ApiResponse.<CartItemResponse>builder()
+                .code(200)
+                .result(cartService.findById(id))
+                .build();
+    }
 }
