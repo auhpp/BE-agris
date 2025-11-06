@@ -1,0 +1,123 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="auhpp (generated)" id="1739716666680-1">
+        <addColumn tableName="order_detail">
+            <column name="payment_provider" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-2">
+        <addColumn tableName="product">
+            <column name="thumbnail" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-3">
+        <addColumn tableName="product_variant_value">
+            <column name="thumbnail" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-4">
+        <dropColumn columnName="created_at" tableName="address"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-5">
+        <dropColumn columnName="created_at" tableName="attribute"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-6">
+        <dropColumn columnName="created_at" tableName="cart_item"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-7">
+        <dropColumn columnName="created_at" tableName="category"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-8">
+        <dropColumn columnName="created_at" tableName="order_item"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-9">
+        <dropColumn columnName="created_at" tableName="product_attribute_value"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-10">
+        <dropColumn columnName="created_at" tableName="product_image"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-11">
+        <dropColumn columnName="created_at" tableName="product_variant_value"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-12">
+        <dropColumn columnName="created_at" tableName="role"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-13">
+        <dropColumn columnName="created_at" tableName="supplier"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-14">
+        <dropColumn columnName="created_at" tableName="variant"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-15">
+        <dropColumn columnName="created_at" tableName="variant_value"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-16">
+        <dropColumn columnName="image" tableName="product"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-17">
+        <dropColumn columnName="provider" tableName="order_detail"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-18">
+        <dropColumn columnName="provider" tableName="users"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-19">
+        <dropColumn columnName="rating" tableName="product"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-20">
+        <dropColumn columnName="status" tableName="category"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-21">
+        <dropColumn columnName="status" tableName="product"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-22">
+        <dropColumn columnName="status" tableName="product_variant_value"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-23">
+        <dropColumn columnName="status" tableName="users"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-24">
+        <dropColumn columnName="stock" tableName="product"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-25">
+        <dropColumn columnName="total_sold" tableName="product"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-26">
+        <dropColumn columnName="updated_at" tableName="address"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-27">
+        <dropColumn columnName="updated_at" tableName="attribute"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-28">
+        <dropColumn columnName="updated_at" tableName="cart_item"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-29">
+        <dropColumn columnName="updated_at" tableName="category"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-30">
+        <dropColumn columnName="updated_at" tableName="order_item"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-31">
+        <dropColumn columnName="updated_at" tableName="product_attribute_value"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-32">
+        <dropColumn columnName="updated_at" tableName="product_image"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-33">
+        <dropColumn columnName="updated_at" tableName="product_variant_value"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-34">
+        <dropColumn columnName="updated_at" tableName="role"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-35">
+        <dropColumn columnName="updated_at" tableName="supplier"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-36">
+        <dropColumn columnName="updated_at" tableName="users"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-37">
+        <dropColumn columnName="updated_at" tableName="variant"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1739716666680-38">
+        <dropColumn columnName="updated_at" tableName="variant_value"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,113 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="auhpp (generated)" id="1744770603282-15">
+        <dropForeignKeyConstraint baseTableName="payment_slip" constraintName="FKottel7kuqw9savd5bggmqpk0r"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-1">
+        <createSequence incrementBy="50" sequenceName="payee_type_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-2">
+        <createSequence incrementBy="50" sequenceName="payment_reason_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-3">
+        <createTable tableName="payee_type">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payee_typePK"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-4">
+        <createTable tableName="payment_reason">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payment_reasonPK"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-5">
+        <addColumn tableName="supplier">
+            <column name="address" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-6">
+        <addColumn tableName="supplier">
+            <column name="contact_name" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-7">
+        <addColumn tableName="supplier">
+            <column name="debt" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-8">
+        <addColumn tableName="payment_slip">
+            <column name="payee_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-9">
+        <addColumn tableName="payment_slip">
+            <column name="payee_name" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-10">
+        <addColumn tableName="payment_slip">
+            <column name="payee_type_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-11">
+        <addColumn tableName="payment_slip">
+            <column name="payment_reason_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-12">
+        <addColumn tableName="supplier">
+            <column name="status" type="SMALLINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-13">
+        <addForeignKeyConstraint baseColumnNames="payee_type_id" baseTableName="payment_slip"
+                                 constraintName="FK44iptrrmu3342u9tvjfugywt1" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="payee_type"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-14">
+        <addForeignKeyConstraint baseColumnNames="payment_reason_id" baseTableName="payment_slip"
+                                 constraintName="FKtpj33e1vwgldo0icqbdleponm" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="payment_reason" validate="true"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-16">
+        <dropColumn columnName="payment_type" tableName="payment_slip"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770603282-17">
+        <dropColumn columnName="warehouse_receipt_id" tableName="payment_slip"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744770933369-1">
+        <modifyDataType columnName="status" newDataType="varchar(255)" tableName="supplier"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744795199416-1">
+        <modifyDataType columnName="name" newDataType="varchar(255)" tableName="payee_type"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744796953253-1">
+        <addColumn tableName="payment_slip">
+            <column name="is_debt" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1744809496039-1" author="auhpp">
+        <insert tableName="payee_type">
+            <column name="name">SUPPLIER</column>
+        </insert>
+        <!--        <insert tableName="payee_type">-->
+        <!--            <column name="name">CUSTOMER</column>-->
+        <!--        </insert>-->
+        <insert tableName="payee_type">
+            <column name="name">OTHER</column>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="auhpp (generated)" id="1744962036310-1">
+        <addColumn tableName="orders">
+            <column name="vnp_txn_ref" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1744971754379-1">
+        <modifyDataType columnName="payment_method" newDataType="varchar(255)" tableName="orders"/>
+    </changeSet>
+
+    <changeSet author="auhpp (generated)" id="1745200502913-1">
+        <addColumn tableName="customer">
+            <column name="email" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1745200502913-2">
+        <addColumn tableName="staff">
+            <column name="email" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1745203669650-1">
+        <dropColumn columnName="email" tableName="account"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1745221795154-1">
+        <addColumn tableName="account">
+            <column name="status" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1745370620654-1">
+        <addColumn tableName="warehouse_receipt">
+            <column name="paid" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1745370620654-2">
+        <dropColumn columnName="amount" tableName="warehouse_receipt"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1745371558554-1">
+        <addColumn tableName="warehouse_receipt">
+            <column name="amount" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

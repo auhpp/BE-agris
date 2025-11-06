@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="auhpp (generated)" id="1741332335351-1">
+        <dropForeignKeyConstraint baseTableName="category" constraintName="FK2y94svpmqttx80mshyny85wqr"/>
+    </changeSet>
+    <changeSet author="auhpp (generated)" id="1741332335351-2">
+        <dropColumn columnName="parent_id" tableName="category"/>
+    </changeSet>
+    <changeSet author="PhiAu (generated)" id="1741762171690-1">
+        <insert tableName="category">
+            <column name="id">3</column>
+            <column name="name">Dụng cụ làm vườn</column>
+            <!--            <column name="status">ACTIVE</column>-->
+            <!--            <column name="parent_id">1</column>-->
+            <!--            <column name="created_at">NOW()</column>-->
+            <!--            <column name="updated_at">NOW()</column>-->
+        </insert>
+    </changeSet>
+
+    <changeSet author="PhiAu (generated)" id="1741762167209-1">
+        <insert tableName="category">
+            <column name="id">4</column>
+            <column name="name">Hạt giống</column>
+            <!--            <column name="status">ACTIVE</column>-->
+            <!--            <column name="parent_id">1</column>-->
+            <!--            <column name="created_at">NOW()</column>-->
+            <!--            <column name="updated_at">NOW()</column>-->
+        </insert>
+    </changeSet>
+
+    <changeSet author="PhiAu (generated)" id="1741782660835-1">
+        <dropNotNullConstraint tableName="product" columnName="production_date"/>
+    </changeSet>
+    <changeSet author="PhiAu (generated)" id="1741782738699-1">
+        <dropNotNullConstraint tableName="product" columnName="expiry"/>
+    </changeSet>
+
+    <changeSet author="PhiAu (generated)" id="1741783985530-1">
+        <modifyDataType tableName="product_attribute_value" columnName="value" newDataType="TEXT"/>
+    </changeSet>
+</databaseChangeLog>
